@@ -157,12 +157,17 @@
         const icon = Portal.getCategoryIcon(p.category);
         const inCart = cart.find(i => i.productId === p.id);
 
+        const userPrice = Portal.getPriceForUser(p.price, user);
+        const userBoxPrice = Portal.getPriceForUser(p.priceBox, user);
+        const tableInfo = PRICE_TABLES[user?.priceTable || 'standard'] || PRICE_TABLES.standard;
+        const discountTag = tableInfo.multiplier < 1 ? `<span style="font-size:0.7rem; color:var(--success); font-weight:600; margin-left:6px;">${tableInfo.label}</span>` : '';
+
         const pricingHtml = user ? `
             <div class="product-pricing">
-              <span class="product-price">${Portal.formatCurrency(p.price)}</span>
-              <span class="product-unit">/ ${p.unit}</span>
+              <span class="product-price">${Portal.formatCurrency(userPrice)}</span>
+              <span class="product-unit">/ ${p.unit}</span>${discountTag}
             </div>
-            <div class="product-box-price">Cx c/ ${p.boxQty}un: ${Portal.formatCurrency(p.priceBox)}</div>
+            <div class="product-box-price">Cx c/ ${p.boxQty}un: ${Portal.formatCurrency(userBoxPrice)}</div>
             <div class="product-stock ${stock.cls}">${stock.text}</div>
             <div class="product-actions">
               <div class="qty-control">

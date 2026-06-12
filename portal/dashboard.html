@@ -378,6 +378,139 @@
 
     .import-zone input[type="file"] { display: none; }
 
+    /* ===== SIDEBAR BADGE ===== */
+    .sidebar-badge {
+      background: var(--danger);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      margin-left: auto;
+    }
+
+    /* ===== REGISTRATION CARDS ===== */
+    .reg-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .reg-card .reg-info { flex: 1; }
+    .reg-card .reg-info h4 { font-size: 0.95rem; margin-bottom: 2px; }
+    .reg-card .reg-info p { font-size: 0.82rem; color: var(--text-3); }
+    .reg-card .reg-actions { display: flex; gap: 8px; }
+    .reg-status { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 6px; }
+    .reg-status.pending { background: var(--warning-light); color: var(--warning); }
+    .reg-status.approved { background: var(--success-light); color: var(--success); }
+    .reg-status.rejected { background: var(--danger-light); color: var(--danger); }
+
+    /* ===== CONFIG SECTIONS (Appearance) ===== */
+    .config-section-inner {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .config-section-inner h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .config-section-inner .cfg-desc {
+      font-size: 0.8rem;
+      color: var(--text-3);
+      margin-bottom: 20px;
+    }
+    .cfg-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .cfg-grid .full { grid-column: 1 / -1; }
+    .cfg-grid label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-2);
+      margin-bottom: 4px;
+    }
+    .cfg-grid input, .cfg-grid select, .cfg-grid textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      color: var(--text);
+      font-family: inherit;
+      outline: none;
+    }
+    .cfg-grid input:focus, .cfg-grid select:focus, .cfg-grid textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+    }
+    .cfg-grid textarea { resize: vertical; min-height: 70px; }
+    .color-pair { display: flex; gap: 8px; align-items: center; }
+    .color-pair input[type="color"] { width: 42px; height: 34px; padding: 2px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; }
+    .color-pair input[type="text"] { flex: 1; font-family: monospace; font-size: 0.82rem; }
+    .cfg-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cfg-toggle:last-child { border-bottom: none; }
+    .cfg-toggle-label { font-size: 0.85rem; font-weight: 500; }
+    .cfg-toggle-desc { font-size: 0.72rem; color: var(--text-3); }
+    .cfg-toggle-btn {
+      width: 42px;
+      height: 22px;
+      background: #cbd5e1;
+      border: none;
+      border-radius: 11px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cfg-toggle-btn.on { background: var(--accent); }
+    .cfg-toggle-btn::after {
+      content: '';
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .cfg-toggle-btn.on::after { transform: translateX(20px); }
+    .preview-header-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .preview-header-inner {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 28px;
+      border-radius: 8px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       .sidebar { display: none; }
@@ -399,13 +532,14 @@
       <a onclick="showPage('products', this)"><span class="icon">📦</span> Produtos</a>
       <a onclick="showPage('categories', this)"><span class="icon">🏷️</span> Categorias</a>
       <a onclick="showPage('clients', this)"><span class="icon">👥</span> Clientes</a>
+      <a onclick="showPage('registrations', this)"><span class="icon">📝</span> Cadastros <span class="sidebar-badge" id="pendingBadge" style="display:none"></span></a>
 
       <div class="sidebar-label">Portal</div>
-      <a href="admin.html"><span class="icon">🎨</span> Aparência</a>
+      <a onclick="showPage('appearance', this)"><span class="icon">🎨</span> Aparência</a>
       <a href="catalogo.html" target="_blank"><span class="icon">👁</span> Ver Portal</a>
 
       <div class="sidebar-label" style="margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06);">Conta</div>
-      <a onclick="DataStore.adminLogout()"><span class="icon">🚪</span> Sair</a>
+      <a onclick="adminLogout()"><span class="icon">🚪</span> Sair</a>
     </nav>
 
     <!-- MAIN -->
@@ -514,6 +648,112 @@
           </table>
         </div>
       </div>
+
+      <!-- ===== REGISTRATIONS (P3) ===== -->
+      <div class="page-section" id="page-registrations">
+        <div class="topbar">
+          <h1>Cadastros Pendentes</h1>
+        </div>
+        <div id="registrationsList"></div>
+        <div id="registrationsEmpty" style="display:none;">
+          <div class="data-card" style="text-align:center; padding:60px 24px;">
+            <div style="font-size:2.5rem; margin-bottom:12px;">✅</div>
+            <h3 style="color:var(--text); margin-bottom:6px;">Nenhum cadastro pendente</h3>
+            <p style="color:var(--text-3); font-size:0.88rem;">Quando clientes se cadastrarem pelo portal, aparecerão aqui para aprovação.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== APPEARANCE / CONFIG (P4) ===== -->
+      <div class="page-section" id="page-appearance">
+        <div class="topbar">
+          <h1>Aparência do Portal</h1>
+          <div class="topbar-actions">
+            <button class="btn btn-secondary" onclick="resetAppearance()">↻ Resetar</button>
+            <button class="btn btn-primary" onclick="saveAppearance()">💾 Salvar Configuração</button>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-header-bar">
+          <p style="font-size:0.78rem; color:var(--text-3); margin-bottom:8px;">Preview do Header</p>
+          <div class="preview-header-inner" id="cfgPreview">
+            <span id="cfgPreviewLogo">DigitalB2B</span>
+          </div>
+        </div>
+
+        <!-- Marca -->
+        <div class="config-section-inner">
+          <h3>🏢 Marca e Identidade</h3>
+          <p class="cfg-desc">Nome da empresa e identidade visual do portal</p>
+          <div class="cfg-grid">
+            <div><label>Nome da Empresa</label><input type="text" id="ap-company" placeholder="Distribuidora Exemplo"></div>
+            <div><label>Nome do Portal</label><input type="text" id="ap-portalName" placeholder="Portal de Compras"></div>
+            <div class="full"><label>Texto do Logo (HTML)</label><input type="text" id="ap-logoText" placeholder="Distribuidora<span>Exemplo</span>"></div>
+            <div class="full"><label>Descrição do Footer</label><textarea id="ap-footerDesc" placeholder="Portal de compras online..."></textarea></div>
+          </div>
+        </div>
+
+        <!-- Cores -->
+        <div class="config-section-inner">
+          <h3>🎨 Cores do Portal</h3>
+          <p class="cfg-desc">Personalize as cores para combinar com a marca</p>
+          <div class="cfg-grid">
+            <div><label>Cor Primária</label><div class="color-pair"><input type="color" id="ap-primary" value="#2563eb" oninput="syncCfgColor('primary')"><input type="text" id="ap-primary-hex" value="#2563eb" oninput="syncCfgHex('primary')"></div></div>
+            <div><label>Cor Primária Hover</label><div class="color-pair"><input type="color" id="ap-primaryHover" value="#1d4ed8" oninput="syncCfgColor('primaryHover')"><input type="text" id="ap-primaryHover-hex" value="#1d4ed8" oninput="syncCfgHex('primaryHover')"></div></div>
+            <div><label>Cor Secundária</label><div class="color-pair"><input type="color" id="ap-secondary" value="#059669" oninput="syncCfgColor('secondary')"><input type="text" id="ap-secondary-hex" value="#059669" oninput="syncCfgHex('secondary')"></div></div>
+            <div><label>Header (fundo)</label><div class="color-pair"><input type="color" id="ap-headerBg" value="#0f172a" oninput="syncCfgColor('headerBg')"><input type="text" id="ap-headerBg-hex" value="#0f172a" oninput="syncCfgHex('headerBg')"></div></div>
+          </div>
+        </div>
+
+        <!-- Contato -->
+        <div class="config-section-inner">
+          <h3>📞 Contato e Atendimento</h3>
+          <p class="cfg-desc">Informações exibidas no portal</p>
+          <div class="cfg-grid">
+            <div><label>Telefone</label><input type="text" id="ap-phone" placeholder="(11) 0000-0000"></div>
+            <div><label>WhatsApp</label><input type="text" id="ap-whatsapp" placeholder="5511900000000"></div>
+            <div><label>E-mail Comercial</label><input type="email" id="ap-email" placeholder="comercial@empresa.com"></div>
+            <div><label>Horário</label><input type="text" id="ap-hours" placeholder="Seg a Sex: 8:00 às 18:00"></div>
+          </div>
+        </div>
+
+        <!-- Frete -->
+        <div class="config-section-inner">
+          <h3>🚚 Frete e Entrega</h3>
+          <p class="cfg-desc">Regras de frete grátis e prazo</p>
+          <div class="cfg-grid">
+            <div><label>Frete Grátis acima de (R$)</label><input type="number" id="ap-freeAbove" placeholder="500" step="50"></div>
+            <div><label>Custo Frete Padrão (R$)</label><input type="number" id="ap-shippingCost" placeholder="29.90" step="0.10"></div>
+            <div><label>Prazo de Entrega (dias)</label><input type="number" id="ap-deliveryDays" placeholder="3" min="1" max="30"></div>
+          </div>
+        </div>
+
+        <!-- Promo Banner -->
+        <div class="config-section-inner">
+          <h3>📢 Banner Promocional</h3>
+          <p class="cfg-desc">Banner no topo do portal</p>
+          <div class="cfg-toggle">
+            <div><div class="cfg-toggle-label">Banner ativo</div><div class="cfg-toggle-desc">Exibe banner no topo das páginas</div></div>
+            <button class="cfg-toggle-btn on" id="ap-promoEnabled" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="cfg-grid" style="margin-top:16px;">
+            <div class="full"><label>Texto do Banner</label><input type="text" id="ap-promoText" placeholder="🚚 Frete grátis acima de R$ 500"></div>
+            <div><label>Texto do Link</label><input type="text" id="ap-promoLinkText" placeholder="Confira as condições"></div>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="config-section-inner">
+          <h3>⚡ Features do Portal</h3>
+          <p class="cfg-desc">Ative ou desative funcionalidades</p>
+          <div class="cfg-toggle"><div><div class="cfg-toggle-label">Pedido Mínimo</div><div class="cfg-toggle-desc">Exige quantidade mínima por produto</div></div><button class="cfg-toggle-btn on" id="ap-feat-minOrder" onclick="this.classList.toggle('on')"></button></div>
+          <div class="cfg-toggle"><div><div class="cfg-toggle-label">Exibir Estoque</div><div class="cfg-toggle-desc">Mostra disponibilidade no catálogo</div></div><button class="cfg-toggle-btn on" id="ap-feat-stock" onclick="this.classList.toggle('on')"></button></div>
+          <div class="cfg-toggle"><div><div class="cfg-toggle-label">Preço por Caixa</div><div class="cfg-toggle-desc">Exibe preço da caixa fechada</div></div><button class="cfg-toggle-btn on" id="ap-feat-boxPrice" onclick="this.classList.toggle('on')"></button></div>
+          <div class="cfg-toggle"><div><div class="cfg-toggle-label">Repetir Pedido</div><div class="cfg-toggle-desc">Permite repetir pedido anterior</div></div><button class="cfg-toggle-btn on" id="ap-feat-reorder" onclick="this.classList.toggle('on')"></button></div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -705,13 +945,27 @@
 
   <script src="js/data.js"></script>
   <script src="js/config.js"></script>
+  <script src="js/portal.js"></script>
   <script src="js/supabase-client.js"></script>
   <script>
+    // ===== ADMIN AUTH CHECK (P5) =====
+    (function() {
+      const u = Portal.getUser();
+      if (!u || u.type !== 'admin') {
+        window.location.href = 'login.html';
+        return;
+      }
+    })();
+
     // ===== CACHE =====
     let cachedProducts = [];
     let cachedCategories = [];
     let cachedOrders = [];
     let cachedClients = [];
+
+    function adminLogout() {
+      Portal.logout();
+    }
 
     // ===== INIT =====
     async function init() {
@@ -721,6 +975,8 @@
       renderProducts();
       renderCategories();
       renderClients();
+      renderRegistrations();
+      loadAppearanceConfig();
     }
 
     async function loadAll() {
@@ -846,17 +1102,24 @@
 
     // ===== CLIENTS =====
     function renderClients() {
-      document.getElementById('clientsTable').innerHTML = cachedClients.length === 0
+      const approved = JSON.parse(localStorage.getItem('db2b_approved_users') || '[]');
+      const allClients = [...cachedClients.filter(c => c.type !== 'admin'), ...approved];
+
+      document.getElementById('clientsTable').innerHTML = allClients.length === 0
         ? '<tr><td colspan="5"><div class="empty-state"><div class="icon">👥</div><h3>Nenhum cliente</h3><p>Cadastre seus clientes (lojistas) para que eles possam acessar o portal.</p><button class="btn btn-primary" onclick="openClientModal()">+ Novo Cliente</button></div></td></tr>'
-        : cachedClients.map(c => `
-          <tr>
-            <td><strong>${c.name}</strong></td>
-            <td>${c.email}</td>
-            <td>${c.cnpj || '—'}</td>
-            <td><span class="badge badge-confirmed">${c.price_table || c.priceTable || 'standard'}</span></td>
-            <td><button class="btn btn-sm btn-secondary" onclick="editClient('${c.id}')">✏️</button></td>
-          </tr>
-        `).join('');
+        : allClients.map(c => {
+          const table = c.price_table || c.priceTable || 'standard';
+          const tableLabel = (typeof PRICE_TABLES !== 'undefined' && PRICE_TABLES[table]) ? PRICE_TABLES[table].label : table;
+          return `
+            <tr>
+              <td><strong>${c.name}</strong></td>
+              <td>${c.email}</td>
+              <td>${c.cnpj || '—'}</td>
+              <td><span class="badge badge-confirmed">${tableLabel}</span></td>
+              <td><button class="btn btn-sm btn-secondary" onclick="editClient('${c.id}')">✏️</button></td>
+            </tr>
+          `;
+        }).join('');
     }
 
     // ===== PRODUCT MODAL =====
@@ -975,9 +1238,18 @@
       const name = document.getElementById('cli-name').value;
       const email = document.getElementById('cli-email').value;
       const password = document.getElementById('cli-password').value;
+      const cnpj = document.getElementById('cli-cnpj').value;
+      const priceTable = document.getElementById('cli-priceTable').value;
       if (!name || !email || !password) { alert('Nome, e-mail e senha são obrigatórios.'); return; }
-      toast('Cliente criado! (conecte ao Supabase para persistir)');
+
+      const approved = JSON.parse(localStorage.getItem('db2b_approved_users') || '[]');
+      const maxId = [...MOCK_USERS, ...approved].reduce((max, u) => Math.max(max, u.id || 0), 0);
+      approved.push({ id: maxId + 1, email, password, name, cnpj, type: 'client', priceTable: priceTable || 'standard' });
+      localStorage.setItem('db2b_approved_users', JSON.stringify(approved));
+
+      toast('Cliente criado com sucesso!');
       closeModal('clientModal');
+      renderClients();
     }
 
     // ===== ORDER STATUS =====
@@ -1093,6 +1365,210 @@
       container.appendChild(t);
       setTimeout(() => t.remove(), 3000);
     }
+
+    // ===== REGISTRATIONS (P3) =====
+    function renderRegistrations() {
+      const pending = JSON.parse(localStorage.getItem('db2b_pending_registrations') || '[]');
+      const listEl = document.getElementById('registrationsList');
+      const emptyEl = document.getElementById('registrationsEmpty');
+      const badge = document.getElementById('pendingBadge');
+
+      const pendingCount = pending.filter(r => r.status === 'pending').length;
+      if (pendingCount > 0) {
+        badge.textContent = pendingCount;
+        badge.style.display = 'inline';
+      } else {
+        badge.style.display = 'none';
+      }
+
+      if (pending.length === 0) {
+        listEl.innerHTML = '';
+        emptyEl.style.display = 'block';
+        return;
+      }
+
+      emptyEl.style.display = 'none';
+      listEl.innerHTML = pending.map((r, i) => {
+        const statusCls = r.status || 'pending';
+        const statusLabel = statusCls === 'pending' ? 'Pendente' : statusCls === 'approved' ? 'Aprovado' : 'Rejeitado';
+        const date = r.registeredAt ? new Date(r.registeredAt).toLocaleDateString('pt-BR') : '—';
+        const actions = r.status === 'pending' ? `
+          <button class="btn btn-sm btn-success" onclick="approveRegistration(${i})">✓ Aprovar</button>
+          <button class="btn btn-sm btn-danger" onclick="rejectRegistration(${i})">✗ Rejeitar</button>
+        ` : '';
+
+        return `
+          <div class="reg-card">
+            <div class="reg-info">
+              <h4>${r.company || r.name}</h4>
+              <p>${r.name} · ${r.email} · ${r.phone || '—'} · CNPJ: ${r.cnpj || '—'} · ${date}</p>
+            </div>
+            <span class="reg-status ${statusCls}">${statusLabel}</span>
+            <div class="reg-actions">${actions}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function approveRegistration(index) {
+      const pending = JSON.parse(localStorage.getItem('db2b_pending_registrations') || '[]');
+      const reg = pending[index];
+      if (!reg) return;
+
+      reg.status = 'approved';
+      localStorage.setItem('db2b_pending_registrations', JSON.stringify(pending));
+
+      const approved = JSON.parse(localStorage.getItem('db2b_approved_users') || '[]');
+      const maxId = [...MOCK_USERS, ...approved].reduce((max, u) => Math.max(max, u.id || 0), 0);
+      approved.push({
+        id: maxId + 1,
+        email: reg.email,
+        password: reg.password,
+        name: reg.company || reg.name,
+        cnpj: reg.cnpj || '',
+        type: 'client',
+        priceTable: 'standard',
+        phone: reg.phone || '',
+      });
+      localStorage.setItem('db2b_approved_users', JSON.stringify(approved));
+
+      toast('Cliente aprovado! Agora pode fazer login.');
+      renderRegistrations();
+    }
+
+    function rejectRegistration(index) {
+      if (!confirm('Rejeitar este cadastro?')) return;
+      const pending = JSON.parse(localStorage.getItem('db2b_pending_registrations') || '[]');
+      if (pending[index]) {
+        pending[index].status = 'rejected';
+        localStorage.setItem('db2b_pending_registrations', JSON.stringify(pending));
+      }
+      toast('Cadastro rejeitado.');
+      renderRegistrations();
+    }
+
+    // ===== APPEARANCE CONFIG (P4) =====
+    function loadAppearanceConfig() {
+      const saved = localStorage.getItem('db2b_config');
+      const cfg = saved ? JSON.parse(saved) : {};
+
+      document.getElementById('ap-company').value = cfg.company || '';
+      document.getElementById('ap-portalName').value = cfg.portalName || '';
+      document.getElementById('ap-logoText').value = cfg.logoText || '';
+      document.getElementById('ap-footerDesc').value = cfg.footer?.description || '';
+
+      const colors = cfg.colors || {};
+      ['primary', 'primaryHover', 'secondary', 'headerBg'].forEach(k => {
+        const val = colors[k] || document.getElementById(`ap-${k}`).value;
+        document.getElementById(`ap-${k}`).value = val;
+        document.getElementById(`ap-${k}-hex`).value = val;
+      });
+
+      const contact = cfg.contact || {};
+      document.getElementById('ap-phone').value = contact.phone || '';
+      document.getElementById('ap-whatsapp').value = contact.whatsapp || '';
+      document.getElementById('ap-email').value = contact.email || '';
+      document.getElementById('ap-hours').value = contact.hours || '';
+
+      const ship = cfg.shipping || {};
+      document.getElementById('ap-freeAbove').value = ship.freeAbove || 500;
+      document.getElementById('ap-shippingCost').value = ship.defaultCost || 29.90;
+      document.getElementById('ap-deliveryDays').value = ship.estimateDays || 3;
+
+      const promo = cfg.promoBanner || {};
+      if (promo.enabled === false) document.getElementById('ap-promoEnabled').classList.remove('on');
+      document.getElementById('ap-promoText').value = promo.text || '';
+      document.getElementById('ap-promoLinkText').value = promo.linkText || '';
+
+      const features = cfg.features || {};
+      if (features.minOrderEnabled === false) document.getElementById('ap-feat-minOrder').classList.remove('on');
+      if (features.stockDisplay === false) document.getElementById('ap-feat-stock').classList.remove('on');
+      if (features.boxPriceDisplay === false) document.getElementById('ap-feat-boxPrice').classList.remove('on');
+      if (features.reorderEnabled === false) document.getElementById('ap-feat-reorder').classList.remove('on');
+
+      updateCfgPreview();
+    }
+
+    function syncCfgColor(key) {
+      const val = document.getElementById(`ap-${key}`).value;
+      document.getElementById(`ap-${key}-hex`).value = val;
+      updateCfgPreview();
+    }
+
+    function syncCfgHex(key) {
+      const val = document.getElementById(`ap-${key}-hex`).value;
+      if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+        document.getElementById(`ap-${key}`).value = val;
+      }
+      updateCfgPreview();
+    }
+
+    function updateCfgPreview() {
+      const headerBg = document.getElementById('ap-headerBg').value;
+      const primary = document.getElementById('ap-primary').value;
+      const logoText = document.getElementById('ap-logoText').value || 'DigitalB2B';
+
+      const preview = document.getElementById('cfgPreview');
+      preview.style.background = headerBg;
+      const logo = document.getElementById('cfgPreviewLogo');
+      logo.innerHTML = logoText;
+      const span = logo.querySelector('span');
+      if (span) span.style.color = primary;
+    }
+
+    function saveAppearance() {
+      const config = {
+        company: document.getElementById('ap-company').value,
+        portalName: document.getElementById('ap-portalName').value,
+        logoText: document.getElementById('ap-logoText').value,
+        colors: {
+          primary: document.getElementById('ap-primary').value,
+          primaryHover: document.getElementById('ap-primaryHover').value,
+          primaryLight: document.getElementById('ap-primary').value + '15',
+          secondary: document.getElementById('ap-secondary').value,
+          headerBg: document.getElementById('ap-headerBg').value,
+          headerBg2: document.getElementById('ap-headerBg').value.replace(/0f|0a/g, '1e'),
+        },
+        contact: {
+          phone: document.getElementById('ap-phone').value,
+          whatsapp: document.getElementById('ap-whatsapp').value,
+          email: document.getElementById('ap-email').value,
+          hours: document.getElementById('ap-hours').value,
+        },
+        shipping: {
+          freeAbove: parseFloat(document.getElementById('ap-freeAbove').value) || 500,
+          defaultCost: parseFloat(document.getElementById('ap-shippingCost').value) || 29.90,
+          estimateDays: parseInt(document.getElementById('ap-deliveryDays').value) || 3,
+        },
+        promoBanner: {
+          enabled: document.getElementById('ap-promoEnabled').classList.contains('on'),
+          text: document.getElementById('ap-promoText').value,
+          linkText: document.getElementById('ap-promoLinkText').value,
+        },
+        features: {
+          minOrderEnabled: document.getElementById('ap-feat-minOrder').classList.contains('on'),
+          stockDisplay: document.getElementById('ap-feat-stock').classList.contains('on'),
+          boxPriceDisplay: document.getElementById('ap-feat-boxPrice').classList.contains('on'),
+          reorderEnabled: document.getElementById('ap-feat-reorder').classList.contains('on'),
+        },
+        footer: {
+          description: document.getElementById('ap-footerDesc').value,
+        },
+      };
+      localStorage.setItem('db2b_config', JSON.stringify(config));
+      toast('Configuração salva com sucesso!');
+    }
+
+    function resetAppearance() {
+      if (!confirm('Resetar todas as configurações para o padrão?')) return;
+      localStorage.removeItem('db2b_config');
+      loadAppearanceConfig();
+      toast('Configuração resetada.');
+    }
+
+    ['ap-company', 'ap-logoText', 'ap-headerBg', 'ap-primary'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateCfgPreview);
+    });
 
     // Close modals on overlay click
     document.querySelectorAll('.modal-overlay').forEach(m => {

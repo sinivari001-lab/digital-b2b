@@ -1,4 +1,10 @@
 // Portal core logic — B2B E-commerce
+const PRICE_TABLES = {
+  standard: { label: 'Padrão', multiplier: 1.0 },
+  vip: { label: 'VIP', multiplier: 0.92 },
+  atacado: { label: 'Atacado', multiplier: 0.85 },
+};
+
 const Portal = {
   // ===== AUTH =====
   getUser() {
@@ -7,10 +13,24 @@ const Portal = {
   },
 
   login(email, password) {
-    const user = MOCK_USERS.find(u => u.email === email && u.password === password);
+    let user = MOCK_USERS.find(u => u.email === email && u.password === password);
+    if (!user) {
+      const approved = JSON.parse(localStorage.getItem('db2b_approved_users') || '[]');
+      user = approved.find(u => u.email === email && u.password === password);
+    }
     if (!user) return null;
     localStorage.setItem('db2b_user', JSON.stringify(user));
     return user;
+  },
+
+  getApprovedUsers() {
+    return JSON.parse(localStorage.getItem('db2b_approved_users') || '[]');
+  },
+
+  getPriceForUser(basePrice, user) {
+    if (!user) return basePrice;
+    const table = PRICE_TABLES[user.priceTable || 'standard'] || PRICE_TABLES.standard;
+    return +(basePrice * table.multiplier).toFixed(2);
   },
 
   logout() {
@@ -82,9 +102,12 @@ const Portal = {
   },
 
   getCartTotal() {
+    const user = this.getUser();
     return this.getCart().reduce((sum, item) => {
       const p = PRODUCTS.find(pr => pr.id === item.productId);
-      return sum + (p ? p.price * item.qty : 0);
+      if (!p) return sum;
+      const price = this.getPriceForUser(p.price, user);
+      return sum + (price * item.qty);
     }, 0);
   },
 
@@ -219,7 +242,9 @@ const Portal = {
     let actionsHtml;
     if (user) {
       const roleLabel = user.type === 'admin' ? 'Admin' : user.type === 'rep' ? 'Representante' : 'Cliente';
+      const adminLink = user.type === 'admin' ? '<a href="dashboard.html" class="header-action" style="color:#f59e0b"><span class="icon">⚙️</span>Painel</a>' : '';
       actionsHtml = `
+        ${adminLink}
         <a href="pedidos.html" class="header-action"><span class="icon">📋</span>Pedidos</a>
         <a href="carrinho.html" class="header-action">
           <span class="icon">🛒</span>Carrinho

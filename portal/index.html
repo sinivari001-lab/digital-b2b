@@ -528,12 +528,14 @@
       document.getElementById(containerId).innerHTML = items.map(p => {
         const catName = Portal.getCategoryName(p.category);
         const icon = Portal.getCategoryIcon(p.category);
+        const userPrice = Portal.getPriceForUser(p.price, user);
+        const userBoxPrice = Portal.getPriceForUser(p.priceBox, user);
         const priceHtml = user ? `
             <div>
-              <span class="pcard-price">${Portal.formatCurrency(p.price)}</span>
+              <span class="pcard-price">${Portal.formatCurrency(userPrice)}</span>
               <span class="pcard-unit">/ ${p.unit}</span>
             </div>
-            <div class="pcard-box">Cx c/ ${p.boxQty}un: ${Portal.formatCurrency(p.priceBox)}</div>
+            <div class="pcard-box">Cx c/ ${p.boxQty}un: ${Portal.formatCurrency(userBoxPrice)}</div>
             <button class="pcard-btn" onclick="event.stopPropagation(); Portal.addToCart(${p.id}, ${p.minOrder});">Adicionar ao Carrinho</button>
           ` : `
             <div class="pcard-login-cta" onclick="event.stopPropagation(); location='register.html';">
