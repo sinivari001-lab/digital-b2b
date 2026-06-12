@@ -527,19 +527,19 @@
       <div class="sidebar-logo">Digital<span>B2B</span></div>
 
       <div class="sidebar-label">Principal</div>
-      <a class="active" onclick="showPage('dashboard', this)"><span class="icon">📊</span> Dashboard</a>
-      <a onclick="showPage('orders', this)"><span class="icon">📋</span> Pedidos</a>
-      <a onclick="showPage('products', this)"><span class="icon">📦</span> Produtos</a>
-      <a onclick="showPage('categories', this)"><span class="icon">🏷️</span> Categorias</a>
-      <a onclick="showPage('clients', this)"><span class="icon">👥</span> Clientes</a>
-      <a onclick="showPage('registrations', this)"><span class="icon">📝</span> Cadastros <span class="sidebar-badge" id="pendingBadge" style="display:none"></span></a>
+      <a class="active" onclick="showPage('dashboard', this)"><span class="icon"><i data-lucide="bar-chart-3"></i></span> Dashboard</a>
+      <a onclick="showPage('orders', this)"><span class="icon"><i data-lucide="clipboard-list"></i></span> Pedidos</a>
+      <a onclick="showPage('products', this)"><span class="icon"><i data-lucide="package"></i></span> Produtos</a>
+      <a onclick="showPage('categories', this)"><span class="icon"><i data-lucide="tags"></i></span> Categorias</a>
+      <a onclick="showPage('clients', this)"><span class="icon"><i data-lucide="users"></i></span> Clientes</a>
+      <a onclick="showPage('registrations', this)"><span class="icon"><i data-lucide="user-check"></i></span> Cadastros <span class="sidebar-badge" id="pendingBadge" style="display:none"></span></a>
 
       <div class="sidebar-label">Portal</div>
-      <a onclick="showPage('appearance', this)"><span class="icon">🎨</span> Aparência</a>
-      <a href="catalogo.html" target="_blank"><span class="icon">👁</span> Ver Portal</a>
+      <a onclick="showPage('appearance', this)"><span class="icon"><i data-lucide="palette"></i></span> Aparência</a>
+      <a href="catalogo.html" target="_blank"><span class="icon"><i data-lucide="external-link"></i></span> Ver Portal</a>
 
       <div class="sidebar-label" style="margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06);">Conta</div>
-      <a onclick="adminLogout()"><span class="icon">🚪</span> Sair</a>
+      <a onclick="adminLogout()"><span class="icon"><i data-lucide="log-out"></i></span> Sair</a>
     </nav>
 
     <!-- MAIN -->
@@ -943,6 +943,7 @@
     </div>
   </div>
 
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <script src="js/data.js"></script>
   <script src="js/config.js"></script>
   <script src="js/portal.js"></script>
@@ -1576,6 +1577,7 @@
     });
 
     init();
+    refreshIcons();
   </script>
 </body>
 </html>

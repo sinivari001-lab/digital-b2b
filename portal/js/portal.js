@@ -242,12 +242,12 @@ const Portal = {
     let actionsHtml;
     if (user) {
       const roleLabel = user.type === 'admin' ? 'Admin' : user.type === 'rep' ? 'Representante' : 'Cliente';
-      const adminLink = user.type === 'admin' ? '<a href="dashboard.html" class="header-action" style="color:#f59e0b"><span class="icon">⚙️</span>Painel</a>' : '';
+      const adminLink = user.type === 'admin' ? '<a href="dashboard.html" class="header-action" style="color:#f59e0b"><span class="lc lc-lg"><i data-lucide="settings"></i></span>Painel</a>' : '';
       actionsHtml = `
         ${adminLink}
-        <a href="pedidos.html" class="header-action"><span class="icon">📋</span>Pedidos</a>
+        <a href="pedidos.html" class="header-action"><span class="lc lc-lg"><i data-lucide="clipboard-list"></i></span>Pedidos</a>
         <a href="carrinho.html" class="header-action">
-          <span class="icon">🛒</span>Carrinho
+          <span class="lc lc-lg"><i data-lucide="shopping-cart"></i></span>Carrinho
           <span class="count cart-count" style="display:none">0</span>
         </a>
         <div class="header-user-info">
@@ -256,16 +256,16 @@ const Portal = {
             <div class="role">${roleLabel}</div>
           </div>
         </div>
-        <button class="header-action" onclick="Portal.logout()"><span class="icon">🚪</span>Sair</button>
+        <button class="header-action" onclick="Portal.logout()"><span class="lc lc-lg"><i data-lucide="log-out"></i></span>Sair</button>
       `;
     } else {
       actionsHtml = `
         <a href="carrinho.html" class="header-action">
-          <span class="icon">🛒</span>Carrinho
+          <span class="lc lc-lg"><i data-lucide="shopping-cart"></i></span>Carrinho
           <span class="count cart-count" style="display:none">0</span>
         </a>
-        <a href="login.html" class="header-action" style="color:#3b82f6"><span class="icon">👤</span>Entrar</a>
-        <a href="register.html" class="header-action" style="color:#059669"><span class="icon">📝</span>Cadastrar</a>
+        <a href="login.html" class="header-action" style="color:#3b82f6"><span class="lc lc-lg"><i data-lucide="user"></i></span>Entrar</a>
+        <a href="register.html" class="header-action" style="color:#059669"><span class="lc lc-lg"><i data-lucide="user-plus"></i></span>Cadastrar</a>
       `;
     }
 
@@ -275,7 +275,7 @@ const Portal = {
         <a href="index.html" class="header-logo">${logoHtml}</a>
         <div class="header-search">
           <input type="text" placeholder="Buscar produtos, marcas, códigos..." id="globalSearch">
-          <button onclick="doSearch()">🔍</button>
+          <button onclick="doSearch()"><i data-lucide="search" style="width:18px;height:18px;"></i></button>
         </div>
         <div class="header-actions">${actionsHtml}</div>
       </div>
@@ -294,6 +294,7 @@ const Portal = {
     `;
 
     this.updateCartBadge();
+    refreshIcons();
   },
 
   // ===== STORE FOOTER =====
@@ -351,4 +352,8 @@ function doSearch() {
   if (input && input.value.trim()) {
     window.location.href = `catalogo.html?q=${encodeURIComponent(input.value.trim())}`;
   }
+}
+
+function refreshIcons() {
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 }
