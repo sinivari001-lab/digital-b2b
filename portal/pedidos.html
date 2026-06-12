@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Pedidos — Portal de Compras B2B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+  <header class="store-header" id="storeHeader"></header>
+
+  <div class="page-container">
+    <div class="page-breadcrumb">
+      <a href="catalogo.html">Início</a> / Meus Pedidos
+    </div>
+
+    <div class="page-title-bar">
+      <div>
+        <h1 class="page-title">Meus Pedidos</h1>
+        <p class="page-subtitle" id="ordersSubtitle"></p>
+      </div>
+      <a href="catalogo.html" class="btn btn-primary btn-sm">+ Novo Pedido</a>
+    </div>
+
+    <div class="orders-list" id="ordersList"></div>
+  </div>
+
+  <footer class="store-footer" id="storeFooter"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/portal.js"></script>
+  <script>
+    Portal.renderStoreHeader();
+    Portal.renderStoreFooter();
+    renderOrders();
+
+    function renderOrders() {
+      const orders = Portal.getOrders();
+      const list = document.getElementById('ordersList');
+      const subtitle = document.getElementById('ordersSubtitle');
+
+      subtitle.textContent = `${orders.length} pedido${orders.length !== 1 ? 's' : ''} registrado${orders.length !== 1 ? 's' : ''}`;
+
+      if (orders.length === 0) {
+        list.innerHTML = `
+          <div class="cart-empty">
+            <div class="cart-empty-icon">📋</div>
+            <h3>Nenhum pedido ainda</h3>
+            <p>Faça seu primeiro pedido pelo catálogo.</p>
+            <br>
+            <a href="catalogo.html" class="btn btn-primary btn-sm">Ir para o Catálogo →</a>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = orders.map(order => {
+        const status = Portal.getStatusInfo(order.status);
+
+        const itemRows = order.items.map(item => {
+          const p = PRODUCTS.find(prod => prod.id === item.productId);
+          if (!p) return '';
+          return `
+            <tr>
+              <td>${p.name}</td>
+              <td>${p.brand}</td>
+              <td style="text-align:center">${item.qty} ${p.unit}</td>
+              <td style="text-align:right">${Portal.formatCurrency(p.price)}</td>
+              <td style="text-align:right; font-weight:600; color:var(--accent-2)">${Portal.formatCurrency(p.price * item.qty)}</td>
+            </tr>
+          `;
+        }).join('');
+
+        const paymentLabels = { boleto: 'Boleto Bancário', pix: 'PIX', prazo: 'Faturado 30 dias' };
+
+        return `
+          <div class="order-card">
+            <div class="order-header" onclick="toggleOrder(${order.id})">
+              <span class="order-id">Pedido #${order.id}</span>
+              <span class="order-date">${Portal.formatDate(order.date)}</span>
+              <span class="order-status" style="background:${status.color}15; color:${status.color}; border:1px solid ${status.color}30;">
+                ${status.label}
+              </span>
+              <span class="order-total">${Portal.formatCurrency(order.total)}</span>
+              <button class="order-toggle" id="toggle-${order.id}">▼</button>
+            </div>
+            <div class="order-details" id="details-${order.id}">
+              <table class="order-items-table">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Marca</th>
+                    <th style="text-align:center">Qtd</th>
+                    <th style="text-align:right">Unitário</th>
+                    <th style="text-align:right">Total</th>
+                  </tr>
+                </thead>
+                <tbody>${itemRows}</tbody>
+              </table>
+              <div class="order-meta">
+                <span>💳 ${paymentLabels[order.payment] || order.payment}</span>
+                <span>🚚 Entrega: ${Portal.formatDate(order.deliveryDate)}</span>
+                <span>📦 ${order.items.length} ite${order.items.length > 1 ? 'ns' : 'm'}</span>
+              </div>
+              <div class="order-actions">
+                <button class="btn btn-secondary btn-sm" onclick="reorder(${order.id})">🔁 Repetir Pedido</button>
+                ${order.status === 'pending' ? `<button class="btn btn-danger btn-sm" onclick="cancelOrder(${order.id})">Cancelar Pedido</button>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleOrder(orderId) {
+      const details = document.getElementById(`details-${orderId}`);
+      const toggle = document.getElementById(`toggle-${orderId}`);
+      details.classList.toggle('open');
+      toggle.classList.toggle('open');
+    }
+
+    function reorder(orderId) {
+      Portal.reorder(orderId);
+      Portal.toast('Itens adicionados ao carrinho!', 'success');
+    }
+
+    function cancelOrder(orderId) {
+      const orders = Portal.getOrders();
+      const order = orders.find(o => o.id === orderId);
+      if (order) {
+        order.status = 'cancelled';
+        Portal.saveOrders(orders);
+        Portal.toast('Pedido cancelado', 'error');
+        renderOrders();
+      }
+    }
+  </script>
+</body>
+</html>

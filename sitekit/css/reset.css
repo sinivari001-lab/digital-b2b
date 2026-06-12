@@ -1,0 +1,56 @@
+/* ============================================================
+   SiteKit — CSS Reset + Base Styles
+   ============================================================ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--sk-font);
+  background: var(--sk-bg-1);
+  color: var(--sk-text-1);
+  line-height: var(--sk-lh);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button { cursor: pointer; }
+
+code, pre {
+  font-family: var(--sk-font-mono);
+}
+
+::selection {
+  background: var(--sk-accent);
+  color: #fff;
+}
+
+/* Scrollbar (Webkit) */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--sk-text-3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--sk-text-2); }

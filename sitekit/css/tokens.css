@@ -1,0 +1,164 @@
+/* ============================================================
+   SiteKit — Design Tokens
+   CSS custom properties for all themes.
+   Override --sk-* vars to customize any vertical.
+   ============================================================ */
+
+:root {
+  /* ----- COLORS: DARK THEME (default) ----- */
+  --sk-bg-1: #0a0e1a;
+  --sk-bg-2: #111827;
+  --sk-bg-3: #1a1f35;
+  --sk-bg-3-hover: #222845;
+
+  --sk-accent: #3b82f6;
+  --sk-accent-hover: #2563eb;
+  --sk-accent-glow: rgba(59, 130, 246, 0.3);
+  --sk-accent-light: rgba(59, 130, 246, 0.12);
+
+  --sk-accent-2: #06d6a0;
+  --sk-accent-2-glow: rgba(6, 214, 160, 0.3);
+
+  --sk-gradient: linear-gradient(135deg, var(--sk-accent), var(--sk-accent-2));
+
+  --sk-text-1: #f1f5f9;
+  --sk-text-2: #94a3b8;
+  --sk-text-3: #64748b;
+  --sk-text-inverse: #0f172a;
+
+  --sk-border: rgba(255, 255, 255, 0.06);
+  --sk-border-accent: rgba(59, 130, 246, 0.2);
+
+  /* ----- COLORS: SEMANTIC ----- */
+  --sk-success: #059669;
+  --sk-success-light: #ecfdf5;
+  --sk-warning: #d97706;
+  --sk-warning-light: #fffbeb;
+  --sk-danger: #dc2626;
+  --sk-danger-light: #fef2f2;
+  --sk-info: #0ea5e9;
+  --sk-info-light: #f0f9ff;
+
+  /* ----- TYPOGRAPHY ----- */
+  --sk-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --sk-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --sk-fs-xs: 0.72rem;
+  --sk-fs-sm: 0.82rem;
+  --sk-fs-base: 0.92rem;
+  --sk-fs-md: 1.05rem;
+  --sk-fs-lg: 1.25rem;
+  --sk-fs-xl: 1.5rem;
+  --sk-fs-2xl: 2rem;
+  --sk-fs-3xl: 2.5rem;
+  --sk-fs-hero: 3.2rem;
+
+  --sk-fw-light: 300;
+  --sk-fw-normal: 400;
+  --sk-fw-medium: 500;
+  --sk-fw-semibold: 600;
+  --sk-fw-bold: 700;
+  --sk-fw-black: 800;
+
+  --sk-lh: 1.6;
+  --sk-lh-tight: 1.2;
+
+  /* ----- SPACING ----- */
+  --sk-space-xs: 4px;
+  --sk-space-sm: 8px;
+  --sk-space-md: 16px;
+  --sk-space-lg: 24px;
+  --sk-space-xl: 32px;
+  --sk-space-2xl: 48px;
+  --sk-space-3xl: 64px;
+
+  /* ----- RADIUS ----- */
+  --sk-radius-sm: 6px;
+  --sk-radius: 10px;
+  --sk-radius-lg: 16px;
+  --sk-radius-xl: 20px;
+  --sk-radius-full: 9999px;
+
+  /* ----- SHADOWS ----- */
+  --sk-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --sk-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --sk-shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --sk-shadow-glow: 0 0 40px var(--sk-accent-glow);
+
+  /* ----- Z-INDEX ----- */
+  --sk-z-dropdown: 100;
+  --sk-z-sticky: 200;
+  --sk-z-modal: 1000;
+  --sk-z-toast: 9999;
+
+  /* ----- TRANSITIONS ----- */
+  --sk-transition: 0.2s ease;
+  --sk-transition-slow: 0.3s ease;
+
+  /* ----- BREAKPOINTS (for reference, used in media queries) ----- */
+  /* --sk-bp-sm: 640px; */
+  /* --sk-bp-md: 768px; */
+  /* --sk-bp-lg: 1024px; */
+  /* --sk-bp-xl: 1200px; */
+
+  /* ----- CONTAINER ----- */
+  --sk-container: 1200px;
+  --sk-container-sm: 640px;
+  --sk-container-lg: 1400px;
+}
+
+/* ===== LIGHT THEME (admin panels) ===== */
+[data-theme="light"] {
+  --sk-bg-1: #f4f5f7;
+  --sk-bg-2: #ffffff;
+  --sk-bg-3: #ffffff;
+  --sk-bg-3-hover: #f8fafc;
+
+  --sk-text-1: #0f172a;
+  --sk-text-2: #334155;
+  --sk-text-3: #64748b;
+  --sk-text-inverse: #f1f5f9;
+
+  --sk-border: #e2e8f0;
+  --sk-border-accent: rgba(37, 99, 235, 0.15);
+
+  --sk-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --sk-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --sk-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== PRESETS (vertical-specific) ===== */
+[data-preset="dental"] {
+  --sk-accent: #0ea5e9;
+  --sk-accent-hover: #0284c7;
+  --sk-accent-2: #06d6a0;
+}
+
+[data-preset="estetica"] {
+  --sk-accent: #c9a96e;
+  --sk-accent-hover: #b8963a;
+  --sk-accent-2: #e8d5b7;
+  --sk-font: 'DM Sans', -apple-system, sans-serif;
+}
+
+[data-preset="barbearia"] {
+  --sk-accent: #f59e0b;
+  --sk-accent-hover: #d97706;
+  --sk-accent-2: #ef4444;
+}
+
+[data-preset="neon"] {
+  --sk-accent: #a855f7;
+  --sk-accent-hover: #9333ea;
+  --sk-accent-2: #06d6a0;
+}
+
+[data-preset="b2b"] {
+  --sk-accent: #6c3ce0;
+  --sk-accent-hover: #5a2dc7;
+  --sk-accent-glow: rgba(108, 60, 224, 0.15);
+  --sk-accent-light: rgba(108, 60, 224, 0.1);
+  --sk-accent-2: #10b981;
+  --sk-accent-2-glow: rgba(16, 185, 129, 0.12);
+  --sk-gradient: linear-gradient(135deg, #6c3ce0, #a855f7);
+}

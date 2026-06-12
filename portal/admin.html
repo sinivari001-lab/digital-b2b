@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Configuração — DigitalB2B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f4f5f7;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --text: #0f172a;
+      --text-2: #334155;
+      --text-3: #64748b;
+      --radius: 10px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .admin-header {
+      background: var(--text);
+      color: #fff;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .admin-header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-header h1 span { color: var(--accent); }
+
+    .admin-actions { display: flex; gap: 10px; }
+
+    .btn {
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-secondary { background: #fff; color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg); }
+
+    .btn-success { background: #059669; color: #fff; }
+    .btn-success:hover { background: #047857; }
+
+    .btn-danger { background: #dc2626; color: #fff; }
+    .btn-danger:hover { background: #b91c1c; }
+
+    .admin-layout {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 24px;
+      padding: 24px;
+    }
+
+    .admin-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 72px;
+      align-self: flex-start;
+    }
+
+    .admin-sidebar a {
+      display: block;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 4px;
+      transition: all 0.15s;
+    }
+
+    .admin-sidebar a:hover { background: var(--card); color: var(--text); }
+    .admin-sidebar a.active { background: var(--accent); color: #fff; }
+
+    .admin-main { flex: 1; min-width: 0; }
+
+    .config-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .config-section h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .config-section .desc {
+      font-size: 0.82rem;
+      color: var(--text-3);
+      margin-bottom: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group { margin-bottom: 0; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-2);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .form-group input[type="color"] {
+      height: 40px;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .color-row input[type="color"] {
+      width: 48px;
+      height: 36px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      padding: 2px;
+    }
+
+    .color-row input[type="text"] {
+      flex: 1;
+      font-family: monospace;
+      font-size: 0.85rem;
+    }
+
+    .form-hint {
+      font-size: 0.72rem;
+      color: var(--text-3);
+      margin-top: 4px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toggle-row:last-child { border-bottom: none; }
+
+    .toggle-label { font-size: 0.88rem; font-weight: 500; }
+    .toggle-desc { font-size: 0.75rem; color: var(--text-3); }
+
+    .toggle {
+      width: 44px;
+      height: 24px;
+      background: #cbd5e1;
+      border: none;
+      border-radius: 12px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle.on { background: var(--accent); }
+
+    .toggle::after {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    .toggle.on::after { transform: translateX(20px); }
+
+    .preview-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .preview-bar h3 { font-size: 0.88rem; color: var(--text-3); margin-bottom: 12px; }
+
+    .preview-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 32px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .saved-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 14px 24px;
+      background: #059669;
+      color: #fff;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 9999;
+    }
+
+    .saved-toast.show { transform: translateY(0); opacity: 1; }
+
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    .product-table th {
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-3);
+      padding: 8px 12px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .product-table td {
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .product-table tr:hover { background: var(--bg); }
+
+    .export-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .export-box pre {
+      font-size: 0.78rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 300px;
+      overflow-y: auto;
+      color: var(--text-2);
+    }
+
+    @media (max-width: 768px) {
+      .admin-layout { flex-direction: column; padding: 16px; }
+      .admin-sidebar { width: 100%; position: static; display: flex; overflow-x: auto; gap: 4px; }
+      .admin-sidebar a { white-space: nowrap; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <h1>⚙️ Painel de <span>Configuração</span></h1>
+    <div class="admin-actions">
+      <a href="catalogo.html" class="btn btn-secondary">👁 Ver Portal</a>
+      <button class="btn btn-primary" onclick="saveAll()">💾 Salvar Tudo</button>
+      <button class="btn btn-danger" onclick="resetConfig()">↻ Resetar</button>
+    </div>
+  </header>
+
+  <div class="admin-layout">
+    <nav class="admin-sidebar">
+      <a href="#marca" class="active" onclick="showSection('marca', this)">🏢 Marca</a>
+      <a href="#cores" onclick="showSection('cores', this)">🎨 Cores</a>
+      <a href="#contato" onclick="showSection('contato', this)">📞 Contato</a>
+      <a href="#frete" onclick="showSection('frete', this)">🚚 Frete</a>
+      <a href="#pagamento" onclick="showSection('pagamento', this)">💳 Pagamento</a>
+      <a href="#promo" onclick="showSection('promo', this)">📢 Promo</a>
+      <a href="#features" onclick="showSection('features', this)">⚡ Features</a>
+      <a href="#produtos" onclick="showSection('produtos', this)">📦 Produtos</a>
+      <a href="#exportar" onclick="showSection('exportar', this)">📤 Exportar</a>
+    </nav>
+
+    <div class="admin-main">
+
+      <!-- PREVIEW -->
+      <div class="preview-bar">
+        <h3>Preview do Header</h3>
+        <div class="preview-header" id="previewHeader">
+          <span id="previewLogo">Distribuidora Exemplo</span>
+        </div>
+      </div>
+
+      <!-- MARCA -->
+      <div class="config-section" id="section-marca">
+        <h2>🏢 Marca e Identidade</h2>
+        <p class="desc">Nome da empresa, texto do logo e identidade visual do portal</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nome da Empresa</label>
+            <input type="text" id="cfg-company" placeholder="Distribuidora Exemplo">
+          </div>
+          <div class="form-group">
+            <label>Nome do Portal</label>
+            <input type="text" id="cfg-portalName" placeholder="Portal de Compras">
+          </div>
+          <div class="form-group full">
+            <label>Texto do Logo (HTML)</label>
+            <input type="text" id="cfg-logoText" placeholder="Distribuidora<span>Exemplo</span>">
+            <p class="form-hint">Use &lt;span&gt; para destacar parte do nome com a cor primária. Ex: Distribuidora&lt;span&gt;Exemplo&lt;/span&gt;</p>
+          </div>
+          <div class="form-group full">
+            <label>URL do Logo (imagem, opcional)</label>
+            <input type="text" id="cfg-logo" placeholder="https://...logo.png ou deixe vazio para usar texto">
+          </div>
+          <div class="form-group full">
+            <label>Descrição do Footer</label>
+            <textarea id="cfg-footerDesc" placeholder="Portal de compras online..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>CNPJ</label>
+            <input type="text" id="cfg-cnpj" placeholder="00.000.000/0001-00">
+          </div>
+        </div>
+      </div>
+
+      <!-- CORES -->
+      <div class="config-section" id="section-cores" style="display:none">
+        <h2>🎨 Cores do Portal</h2>
+        <p class="desc">Personalize as cores para combinar com a marca do cliente</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Cor Primária (botões, links)</label>
+            <div class="color-row">
+              <input type="color" id="cfg-primary" value="#2563eb" onchange="syncColor('primary')">
+              <input type="text" id="cfg-primary-hex" value="#2563eb" onchange="syncColorHex('primary')">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Cor Primária Hover</label>
+            <div class="color-row">
+              <input type="color" id="cfg-primaryHover" value="#1d4ed8" onchange="syncColor('primaryHover')">
+              <input type="text" id="cfg-primaryHover-hex" value="#1d4ed8" onchange="syncColorHex('primaryHover')">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Cor Secundária (preços, sucesso)</label>
+            <div class="color-row">
+              <input type="color" id="cfg-secondary" value="#059669" onchange="syncColor('secondary')">
+              <input type="text" id="cfg-secondary-hex" value="#059669" onchange="syncColorHex('secondary')">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Header (fundo)</label>
+            <div class="color-row">
+              <input type="color" id="cfg-headerBg" value="#0f172a" onchange="syncColor('headerBg')">
+              <input type="text" id="cfg-headerBg-hex" value="#0f172a" onchange="syncColorHex('headerBg')">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTATO -->
+      <div class="config-section" id="section-contato" style="display:none">
+        <h2>📞 Contato e Atendimento</h2>
+        <p class="desc">Informações de contato exibidas no portal</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="text" id="cfg-phone" placeholder="(11) 0000-0000">
+          </div>
+          <div class="form-group">
+            <label>WhatsApp (apenas números)</label>
+            <input type="text" id="cfg-whatsapp" placeholder="5511900000000">
+          </div>
+          <div class="form-group">
+            <label>E-mail Comercial</label>
+            <input type="email" id="cfg-email" placeholder="comercial@empresa.com">
+          </div>
+          <div class="form-group">
+            <label>Horário de Atendimento</label>
+            <input type="text" id="cfg-hours" placeholder="Seg a Sex: 8:00 às 18:00">
+          </div>
+          <div class="form-group full">
+            <label>Endereço</label>
+            <input type="text" id="cfg-address" placeholder="Rua Exemplo, 123 — Cidade/UF">
+          </div>
+        </div>
+      </div>
+
+      <!-- FRETE -->
+      <div class="config-section" id="section-frete" style="display:none">
+        <h2>🚚 Frete e Entrega</h2>
+        <p class="desc">Regras de frete grátis e prazo de entrega</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Frete Grátis acima de (R$)</label>
+            <input type="number" id="cfg-freeAbove" placeholder="500" step="50">
+          </div>
+          <div class="form-group">
+            <label>Custo do Frete Padrão (R$)</label>
+            <input type="number" id="cfg-shippingCost" placeholder="29.90" step="0.10">
+          </div>
+          <div class="form-group">
+            <label>Prazo de Entrega (dias úteis)</label>
+            <input type="number" id="cfg-deliveryDays" placeholder="3" min="1" max="30">
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGAMENTO -->
+      <div class="config-section" id="section-pagamento" style="display:none">
+        <h2>💳 Formas de Pagamento</h2>
+        <p class="desc">Configure as formas de pagamento aceitas e descontos</p>
+        <div id="paymentList"></div>
+      </div>
+
+      <!-- PROMO -->
+      <div class="config-section" id="section-promo" style="display:none">
+        <h2>📢 Banner Promocional</h2>
+        <p class="desc">Banner no topo do portal com promoções ou avisos</p>
+        <div class="form-grid">
+          <div class="form-group full">
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">Banner ativo</div>
+                <div class="toggle-desc">Exibe o banner promocional no topo das páginas</div>
+              </div>
+              <button class="toggle on" id="cfg-promoEnabled" onclick="this.classList.toggle('on')"></button>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label>Texto do Banner</label>
+            <input type="text" id="cfg-promoText" placeholder="🚚 Frete grátis em pedidos acima de R$ 500">
+          </div>
+          <div class="form-group">
+            <label>Texto do Link</label>
+            <input type="text" id="cfg-promoLinkText" placeholder="Confira as condições">
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURES -->
+      <div class="config-section" id="section-features" style="display:none">
+        <h2>⚡ Features do Portal</h2>
+        <p class="desc">Ative ou desative funcionalidades do portal</p>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Pedido Mínimo</div>
+            <div class="toggle-desc">Exige quantidade mínima por produto</div>
+          </div>
+          <button class="toggle on" id="feat-minOrder" onclick="this.classList.toggle('on')"></button>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Exibir Estoque</div>
+            <div class="toggle-desc">Mostra disponibilidade de estoque no catálogo</div>
+          </div>
+          <button class="toggle on" id="feat-stock" onclick="this.classList.toggle('on')"></button>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Preço por Caixa</div>
+            <div class="toggle-desc">Exibe preço da caixa fechada nos produtos</div>
+          </div>
+          <button class="toggle on" id="feat-boxPrice" onclick="this.classList.toggle('on')"></button>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Repetir Pedido</div>
+            <div class="toggle-desc">Permite repetir pedido anterior com 1 clique</div>
+          </div>
+          <button class="toggle on" id="feat-reorder" onclick="this.classList.toggle('on')"></button>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Cancelar Pedido</div>
+            <div class="toggle-desc">Permite cancelar pedidos pendentes</div>
+          </div>
+          <button class="toggle on" id="feat-cancel" onclick="this.classList.toggle('on')"></button>
+        </div>
+      </div>
+
+      <!-- PRODUTOS -->
+      <div class="config-section" id="section-produtos" style="display:none">
+        <h2>📦 Produtos Cadastrados</h2>
+        <p class="desc">Produtos do catálogo. Para edição completa, altere o arquivo <code>js/data.js</code></p>
+        <p style="font-size:0.85rem; color:var(--text-2); margin-bottom:12px;"><strong id="productTotal">0</strong> produtos · <strong id="categoryTotal">0</strong> categorias · <strong id="brandTotal">0</strong> marcas</p>
+        <table class="product-table" id="productTable">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Produto</th>
+              <th>Marca</th>
+              <th>Categoria</th>
+              <th>Preço</th>
+              <th>Estoque</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- EXPORTAR -->
+      <div class="config-section" id="section-exportar" style="display:none">
+        <h2>📤 Exportar Configuração</h2>
+        <p class="desc">Copie este JSON e cole no arquivo <code>js/config.js</code> do cliente ou salve para backup</p>
+        <button class="btn btn-primary" onclick="generateExport()" style="margin-bottom:12px;">Gerar config.js</button>
+        <button class="btn btn-secondary" onclick="copyExport()">📋 Copiar</button>
+        <div class="export-box">
+          <pre id="exportCode">Clique em "Gerar config.js" para ver a configuração</pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="saved-toast" id="savedToast">✓ Configuração salva com sucesso!</div>
+
+  <script src="js/data.js"></script>
+  <script>
+    // Load saved config
+    const saved = localStorage.getItem('db2b_config');
+    const cfg = saved ? JSON.parse(saved) : {};
+
+    // Populate fields
+    function loadFields() {
+      document.getElementById('cfg-company').value = cfg.company || 'Distribuidora Exemplo';
+      document.getElementById('cfg-portalName').value = cfg.portalName || 'Portal de Compras';
+      document.getElementById('cfg-logoText').value = cfg.logoText || 'Distribuidora<span>Exemplo</span>';
+      document.getElementById('cfg-logo').value = cfg.logo || '';
+      document.getElementById('cfg-footerDesc').value = cfg.footer?.description || 'Portal de compras online para revendedores e atacadistas.';
+      document.getElementById('cfg-cnpj').value = cfg.footer?.cnpj || '';
+
+      const colors = cfg.colors || {};
+      ['primary', 'primaryHover', 'secondary', 'headerBg'].forEach(k => {
+        const val = colors[k] || document.getElementById(`cfg-${k}`).value;
+        document.getElementById(`cfg-${k}`).value = val;
+        document.getElementById(`cfg-${k}-hex`).value = val;
+      });
+
+      const contact = cfg.contact || {};
+      document.getElementById('cfg-phone').value = contact.phone || '';
+      document.getElementById('cfg-whatsapp').value = contact.whatsapp || '';
+      document.getElementById('cfg-email').value = contact.email || '';
+      document.getElementById('cfg-hours').value = contact.hours || '';
+      document.getElementById('cfg-address').value = contact.address || '';
+
+      const ship = cfg.shipping || {};
+      document.getElementById('cfg-freeAbove').value = ship.freeAbove || 500;
+      document.getElementById('cfg-shippingCost').value = ship.defaultCost || 29.90;
+      document.getElementById('cfg-deliveryDays').value = ship.estimateDays || 3;
+
+      const promo = cfg.promoBanner || {};
+      if (promo.enabled === false) document.getElementById('cfg-promoEnabled').classList.remove('on');
+      document.getElementById('cfg-promoText').value = promo.text || '🚚 Frete grátis em pedidos acima de R$ 500';
+      document.getElementById('cfg-promoLinkText').value = promo.linkText || 'Confira as condições';
+
+      renderPayments();
+      renderProducts();
+      updatePreview();
+    }
+
+    function renderPayments() {
+      const payments = cfg.payments || [
+        { id: 'boleto', label: 'Boleto Bancário', discount: 0 },
+        { id: 'pix', label: 'PIX', discount: 5 },
+        { id: 'prazo', label: 'Faturado 30 dias', discount: 0 },
+      ];
+
+      document.getElementById('paymentList').innerHTML = payments.map((p, i) => `
+        <div class="toggle-row">
+          <div style="flex:1;">
+            <input type="text" value="${p.label}" style="border:1px solid var(--border); border-radius:6px; padding:6px 10px; font-size:0.88rem; width:200px;" data-pay-label="${i}">
+            <span style="margin-left:12px; font-size:0.82rem; color:var(--text-3);">
+              Desconto: <input type="number" value="${p.discount}" min="0" max="100" style="width:50px; border:1px solid var(--border); border-radius:4px; padding:4px 6px; font-size:0.82rem; text-align:center;" data-pay-disc="${i}">%
+            </span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderProducts() {
+      const tbody = document.querySelector('#productTable tbody');
+      tbody.innerHTML = PRODUCTS.map(p => `
+        <tr>
+          <td><code>${p.sku}</code></td>
+          <td>${p.name}</td>
+          <td>${p.brand}</td>
+          <td>${p.category}</td>
+          <td>R$ ${p.price.toFixed(2)}</td>
+          <td>${p.stock}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('productTotal').textContent = PRODUCTS.length;
+      document.getElementById('categoryTotal').textContent = CATEGORIES.length;
+      document.getElementById('brandTotal').textContent = new Set(PRODUCTS.map(p => p.brand)).size;
+    }
+
+    function syncColor(key) {
+      const val = document.getElementById(`cfg-${key}`).value;
+      document.getElementById(`cfg-${key}-hex`).value = val;
+      updatePreview();
+    }
+
+    function syncColorHex(key) {
+      const val = document.getElementById(`cfg-${key}-hex`).value;
+      if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+        document.getElementById(`cfg-${key}`).value = val;
+      }
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const headerBg = document.getElementById('cfg-headerBg').value;
+      const primary = document.getElementById('cfg-primary').value;
+      const logoText = document.getElementById('cfg-logoText').value || 'DigitalB2B';
+
+      const preview = document.getElementById('previewHeader');
+      preview.style.background = headerBg;
+
+      const logo = document.getElementById('previewLogo');
+      logo.innerHTML = logoText;
+      const span = logo.querySelector('span');
+      if (span) span.style.color = primary;
+    }
+
+    function showSection(id, el) {
+      document.querySelectorAll('.config-section').forEach(s => s.style.display = 'none');
+      document.getElementById(`section-${id}`).style.display = 'block';
+      document.querySelectorAll('.admin-sidebar a').forEach(a => a.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function collectConfig() {
+      return {
+        company: document.getElementById('cfg-company').value,
+        portalName: document.getElementById('cfg-portalName').value,
+        logoText: document.getElementById('cfg-logoText').value,
+        logo: document.getElementById('cfg-logo').value,
+        colors: {
+          primary: document.getElementById('cfg-primary').value,
+          primaryHover: document.getElementById('cfg-primaryHover').value,
+          primaryLight: document.getElementById('cfg-primary').value + '15',
+          secondary: document.getElementById('cfg-secondary').value,
+          headerBg: document.getElementById('cfg-headerBg').value,
+          headerBg2: document.getElementById('cfg-headerBg').value.replace(/0f|0a/g, '1e'),
+        },
+        contact: {
+          phone: document.getElementById('cfg-phone').value,
+          whatsapp: document.getElementById('cfg-whatsapp').value,
+          email: document.getElementById('cfg-email').value,
+          hours: document.getElementById('cfg-hours').value,
+          address: document.getElementById('cfg-address').value,
+        },
+        shipping: {
+          freeAbove: parseFloat(document.getElementById('cfg-freeAbove').value) || 500,
+          defaultCost: parseFloat(document.getElementById('cfg-shippingCost').value) || 29.90,
+          estimateDays: parseInt(document.getElementById('cfg-deliveryDays').value) || 3,
+        },
+        payments: Array.from(document.querySelectorAll('[data-pay-label]')).map((el, i) => ({
+          id: ['boleto', 'pix', 'prazo'][i],
+          label: el.value,
+          discount: parseFloat(document.querySelector(`[data-pay-disc="${i}"]`).value) || 0,
+        })),
+        promoBanner: {
+          enabled: document.getElementById('cfg-promoEnabled').classList.contains('on'),
+          text: document.getElementById('cfg-promoText').value,
+          linkText: document.getElementById('cfg-promoLinkText').value,
+        },
+        features: {
+          minOrderEnabled: document.getElementById('feat-minOrder').classList.contains('on'),
+          stockDisplay: document.getElementById('feat-stock').classList.contains('on'),
+          boxPriceDisplay: document.getElementById('feat-boxPrice').classList.contains('on'),
+          reorderEnabled: document.getElementById('feat-reorder').classList.contains('on'),
+          cancelEnabled: document.getElementById('feat-cancel').classList.contains('on'),
+        },
+        footer: {
+          description: document.getElementById('cfg-footerDesc').value,
+          cnpj: document.getElementById('cfg-cnpj').value,
+        },
+      };
+    }
+
+    function saveAll() {
+      const config = collectConfig();
+      localStorage.setItem('db2b_config', JSON.stringify(config));
+
+      const toast = document.getElementById('savedToast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function resetConfig() {
+      if (confirm('Resetar todas as configurações para o padrão?')) {
+        localStorage.removeItem('db2b_config');
+        location.reload();
+      }
+    }
+
+    function generateExport() {
+      const config = collectConfig();
+      const code = `// Configuração gerada em ${new Date().toLocaleDateString('pt-BR')}\nconst CONFIG = ${JSON.stringify(config, null, 2)};\n\nfunction applyConfig() {\n  const root = document.documentElement;\n  Object.entries(CONFIG.colors).forEach(([k, v]) => {\n    const map = { primary: '--accent', primaryHover: '--accent-hover', secondary: '--accent-2', headerBg: '--bg-header', headerBg2: '--bg-header-2' };\n    if (map[k] && v) root.style.setProperty(map[k], v);\n  });\n  document.title = CONFIG.portalName + ' — ' + CONFIG.company;\n}\napplyConfig();`;
+      document.getElementById('exportCode').textContent = code;
+    }
+
+    function copyExport() {
+      const text = document.getElementById('exportCode').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('savedToast');
+        toast.textContent = '📋 Copiado para a área de transferência!';
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); toast.textContent = '✓ Configuração salva com sucesso!'; }, 2000);
+      });
+    }
+
+    // Listen for changes to update preview
+    ['cfg-company', 'cfg-logoText', 'cfg-headerBg', 'cfg-primary'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updatePreview);
+    });
+
+    loadFields();
+  </script>
+</body>
+</html>

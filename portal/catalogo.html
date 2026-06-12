@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo — Portal de Compras B2B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+  <div class="promo-banner">
+    🚚 Frete grátis em pedidos acima de R$ 500 · <a href="#">Confira as condições</a>
+  </div>
+
+  <header class="store-header" id="storeHeader"></header>
+
+  <div class="page-container">
+    <div class="page-breadcrumb">
+      <a href="index.html">Início</a> / <span id="breadcrumbCat">Todos os Produtos</span>
+    </div>
+
+    <!-- Banner da empresa -->
+    <div class="ad-banner ad-hero-banner" onclick="location='catalogo.html'" style="cursor:pointer;">
+      <div class="ad-placeholder">
+        <div class="ad-placeholder-icon">&#128248;</div>
+        <div class="ad-placeholder-text">Foto ou Banner da Empresa</div>
+        <div class="ad-placeholder-size">Coloque sua imagem promocional &middot; 1336 x 180 px</div>
+      </div>
+    </div>
+
+    <div class="page-title-bar">
+      <div>
+        <h1 class="page-title" id="pageTitle">Catalogo de Produtos</h1>
+        <p class="page-subtitle" id="pageSubtitle">Navegue por categorias ou busque pelo nome</p>
+      </div>
+      <span class="catalog-info" id="productCount"></span>
+    </div>
+
+    <div class="catalog-toolbar" id="toolbar">
+      <div class="toolbar-left" id="brandFilters"></div>
+    </div>
+
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+
+  <!-- Banner rodape da empresa -->
+  <div class="ad-bottom-banner">
+    <div class="ad-banner-inner ad-banner" style="cursor:pointer;">
+      <div class="ad-placeholder">
+        <div class="ad-placeholder-icon">&#128247;</div>
+        <div class="ad-placeholder-text">Banner Inferior — Sua Campanha Aqui</div>
+        <div class="ad-placeholder-size">Coloque sua imagem &middot; 1336 x 100 px</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="store-footer" id="storeFooter"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/portal.js"></script>
+  <script>
+    const user = Portal.getUser();
+    let activeCategory = 'all';
+    let activeBrand = 'all';
+    let searchQuery = '';
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('q')) searchQuery = params.get('q');
+    if (params.get('cat')) activeCategory = params.get('cat');
+
+    Portal.renderStoreHeader(activeCategory);
+    Portal.renderStoreFooter();
+
+    const searchInput = document.getElementById('globalSearch');
+    if (searchInput) {
+      if (searchQuery) searchInput.value = searchQuery;
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); doSearch(); }
+      });
+    }
+
+    function getFilteredProducts() {
+      let filtered = [...PRODUCTS];
+      if (activeCategory !== 'all') filtered = filtered.filter(p => p.category === activeCategory);
+      if (activeBrand !== 'all') filtered = filtered.filter(p => p.brand === activeBrand);
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(q) ||
+          p.brand.toLowerCase().includes(q) ||
+          p.sku.toLowerCase().includes(q) ||
+          p.barcode.includes(q)
+        );
+      }
+      return filtered;
+    }
+
+    function renderBrandFilters() {
+      const products = activeCategory !== 'all'
+        ? PRODUCTS.filter(p => p.category === activeCategory)
+        : PRODUCTS;
+      const brands = [...new Set(products.map(p => p.brand))].sort();
+
+      const container = document.getElementById('brandFilters');
+      container.innerHTML = `
+        <button class="filter-chip ${activeBrand === 'all' ? 'active' : ''}" onclick="filterBrand('all')">Todas as Marcas</button>
+        ${brands.map(b => `
+          <button class="filter-chip ${activeBrand === b ? 'active' : ''}" onclick="filterBrand('${b}')">${b}</button>
+        `).join('')}
+      `;
+    }
+
+    function filterBrand(brand) {
+      activeBrand = brand;
+      renderBrandFilters();
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const products = getFilteredProducts();
+      const grid = document.getElementById('productGrid');
+      const count = document.getElementById('productCount');
+      const title = document.getElementById('pageTitle');
+      const subtitle = document.getElementById('pageSubtitle');
+      const breadcrumb = document.getElementById('breadcrumbCat');
+
+      count.textContent = `${products.length} produto${products.length !== 1 ? 's' : ''}`;
+
+      if (searchQuery) {
+        title.textContent = `Resultados para "${searchQuery}"`;
+        subtitle.textContent = `${products.length} produto${products.length !== 1 ? 's' : ''} encontrado${products.length !== 1 ? 's' : ''}`;
+        breadcrumb.textContent = `Busca: ${searchQuery}`;
+      } else if (activeCategory !== 'all') {
+        const catName = Portal.getCategoryName(activeCategory);
+        title.textContent = catName;
+        subtitle.textContent = `${products.length} produto${products.length !== 1 ? 's' : ''} nesta categoria`;
+        breadcrumb.textContent = catName;
+      }
+
+      if (products.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column:1/-1; text-align:center; padding:80px 24px;">
+            <div style="font-size:3rem; margin-bottom:16px;">🔍</div>
+            <h3 style="color:var(--text-dark); margin-bottom:8px;">Nenhum produto encontrado</h3>
+            <p style="color:var(--text-muted);">Tente outra busca ou categoria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const cart = Portal.getCart();
+      grid.innerHTML = products.map(p => {
+        const stock = Portal.getStockLabel(p.stock);
+        const icon = Portal.getCategoryIcon(p.category);
+        const inCart = cart.find(i => i.productId === p.id);
+
+        const pricingHtml = user ? `
+            <div class="product-pricing">
+              <span class="product-price">${Portal.formatCurrency(p.price)}</span>
+              <span class="product-unit">/ ${p.unit}</span>
+            </div>
+            <div class="product-box-price">Cx c/ ${p.boxQty}un: ${Portal.formatCurrency(p.priceBox)}</div>
+            <div class="product-stock ${stock.cls}">${stock.text}</div>
+            <div class="product-actions">
+              <div class="qty-control">
+                <button onclick="changeQty(${p.id}, -${p.minOrder})">−</button>
+                <input type="number" id="qty-${p.id}" value="${inCart ? inCart.qty : p.minOrder}" min="${p.minOrder}" step="${p.minOrder}">
+                <button onclick="changeQty(${p.id}, ${p.minOrder})">+</button>
+              </div>
+              <button class="add-cart-btn ${inCart ? 'added' : ''}" onclick="addProduct(${p.id})" ${p.stock === 0 ? 'disabled' : ''}>
+                ${inCart ? '✓ No carrinho' : 'Adicionar'}
+              </button>
+            </div>
+            <div class="product-min-order">Mín. ${p.minOrder} ${p.unit}</div>
+          ` : `
+            <div class="product-stock ${stock.cls}">${stock.text}</div>
+            <a href="register.html" class="price-login-cta">Cadastre-se para ver preços</a>
+          `;
+
+        return `
+          <div class="product-card" data-id="${p.id}">
+            <div class="product-header">
+              <span class="product-category-tag">${Portal.getCategoryName(p.category)}</span>
+              <span class="product-sku">${p.sku}</span>
+            </div>
+            <div class="product-image">${icon}</div>
+            <div class="product-name">${p.name}</div>
+            <div class="product-brand">${p.brand}</div>
+            ${pricingHtml}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function changeQty(productId, delta) {
+      const input = document.getElementById(`qty-${productId}`);
+      const product = PRODUCTS.find(p => p.id === productId);
+      if (!input || !product) return;
+      let val = parseInt(input.value) + delta;
+      if (val < product.minOrder) val = product.minOrder;
+      input.value = val;
+    }
+
+    function addProduct(productId) {
+      const input = document.getElementById(`qty-${productId}`);
+      const qty = parseInt(input.value);
+      Portal.addToCart(productId, qty);
+
+      const btn = input.closest('.product-card').querySelector('.add-cart-btn');
+      btn.textContent = '✓ No carrinho';
+      btn.classList.add('added');
+    }
+
+    renderBrandFilters();
+    renderProducts();
+
+    // Banner da empresa entre os produtos (apos o 8o produto)
+    setTimeout(() => {
+      const grid = document.getElementById('productGrid');
+      const cards = grid.querySelectorAll('.product-card');
+      if (cards.length > 8) {
+        const banner = document.createElement('div');
+        banner.className = 'ad-banner ad-inline-banner';
+        banner.style.cursor = 'pointer';
+        banner.innerHTML = `
+          <div class="ad-placeholder">
+            <div class="ad-placeholder-icon">&#128248;</div>
+            <div class="ad-placeholder-text">Banner da Empresa — Destaque de Produto ou Campanha</div>
+            <div class="ad-placeholder-size">Coloque sua imagem &middot; 100% x 120 px</div>
+          </div>
+        `;
+        cards[7].insertAdjacentElement('afterend', banner);
+      }
+    }, 100);
+  </script>
+</body>
+</html>

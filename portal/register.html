@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastre-se — Portal de Compras B2B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-left">
+      <div class="logo">Digital<span>B2B</span></div>
+      <h1>Crie sua conta<br>e veja nossos precos</h1>
+      <p>Cadastre-se para acessar o catalogo completo com precos, fazer pedidos online e acompanhar suas entregas.</p>
+      <ul class="login-features">
+        <li><span class="icon">💰</span> Veja precos e condicoes exclusivas</li>
+        <li><span class="icon">📦</span> Faca pedidos online 24h</li>
+        <li><span class="icon">🔄</span> Repita pedidos anteriores com 1 clique</li>
+        <li><span class="icon">🚚</span> Acompanhe entregas em tempo real</li>
+        <li><span class="icon">📱</span> Acesse de qualquer dispositivo</li>
+      </ul>
+    </div>
+
+    <div class="login-right">
+      <div id="registerForm">
+        <h2>Criar minha conta</h2>
+        <p class="subtitle">Preencha seus dados para acessar o portal</p>
+
+        <form onsubmit="doRegister(event)">
+          <div class="form-group">
+            <label for="regCompany">Nome da Empresa *</label>
+            <input type="text" id="regCompany" placeholder="Ex: Mercearia Sao Jorge" required>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label for="regCnpj">CNPJ</label>
+              <input type="text" id="regCnpj" placeholder="00.000.000/0001-00">
+            </div>
+            <div class="form-group">
+              <label for="regPhone">Telefone / WhatsApp *</label>
+              <input type="tel" id="regPhone" placeholder="(71) 9 0000-0000" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="regName">Seu nome completo *</label>
+            <input type="text" id="regName" placeholder="Joao da Silva" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regEmail">E-mail *</label>
+            <input type="email" id="regEmail" placeholder="joao@empresa.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regPassword">Senha *</label>
+            <input type="password" id="regPassword" placeholder="Minimo 6 caracteres" required minlength="6">
+          </div>
+
+          <div class="form-error" id="registerError">Erro ao criar conta.</div>
+
+          <button type="submit" class="btn btn-primary" id="registerBtn">Criar minha conta →</button>
+        </form>
+
+        <div class="login-demo" style="margin-top:16px;">
+          <p>Ja tem conta? <a href="login.html" style="color:#3b82f6; font-weight:600;">Entrar</a></p>
+        </div>
+      </div>
+
+      <div id="registerSuccess" style="display:none; text-align:center; padding:40px 0;">
+        <div style="font-size:3rem; margin-bottom:16px;">✅</div>
+        <h2 style="margin-bottom:8px;">Cadastro enviado!</h2>
+        <p class="subtitle" style="margin-bottom:24px;">Seu cadastro sera analisado pela equipe comercial. Voce recebera um e-mail quando for aprovado.</p>
+        <a href="index.html" class="btn btn-primary" style="display:inline-block; padding:12px 32px;">Voltar ao Portal</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/portal.js"></script>
+  <script>
+    if (Portal.getUser()) window.location.href = 'index.html';
+
+    function doRegister(e) {
+      e.preventDefault();
+      const btn = document.getElementById('registerBtn');
+      const errorEl = document.getElementById('registerError');
+      errorEl.classList.remove('show');
+
+      const fields = {
+        company: document.getElementById('regCompany').value.trim(),
+        cnpj: document.getElementById('regCnpj').value.trim(),
+        phone: document.getElementById('regPhone').value.trim(),
+        name: document.getElementById('regName').value.trim(),
+        email: document.getElementById('regEmail').value.trim(),
+        password: document.getElementById('regPassword').value,
+      };
+
+      if (!fields.company || !fields.phone || !fields.name || !fields.email || !fields.password) {
+        errorEl.textContent = 'Preencha todos os campos obrigatorios.';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      if (fields.password.length < 6) {
+        errorEl.textContent = 'A senha deve ter no minimo 6 caracteres.';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
+      // Demo mode: save to localStorage pending list and show success
+      const pending = JSON.parse(localStorage.getItem('db2b_pending_registrations') || '[]');
+      pending.push({
+        ...fields,
+        status: 'pending',
+        type: 'client',
+        registeredAt: new Date().toISOString(),
+      });
+      localStorage.setItem('db2b_pending_registrations', JSON.stringify(pending));
+
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('registerSuccess').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

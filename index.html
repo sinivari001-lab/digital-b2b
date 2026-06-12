@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light" data-preset="b2b">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DigitalB2B — Portal de Vendas Online para Distribuidores</title>
+  <meta name="description" content="Transforme sua distribuidora com um portal B2B profissional. Pedidos 24h, catálogo digital, integração ERP.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="sitekit/css/tokens.css">
+  <link rel="stylesheet" href="sitekit/css/reset.css">
+  <link rel="stylesheet" href="sitekit/css/components.css">
+  <link rel="stylesheet" href="sitekit/css/layouts.css">
+  <style>
+    /* ===== PROMO TOP BAR ===== */
+    .top-bar {
+      background: var(--sk-accent); color: #fff; text-align: center;
+      padding: 10px; font-size: var(--sk-fs-xs); font-weight: var(--sk-fw-semibold);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 201;
+    }
+    .top-bar a { text-decoration: underline; margin-left: 6px; }
+
+    /* Nav: push below promo bar (38px) */
+    .sk-nav { top: 38px !important; }
+    .sk-nav.scrolled {
+      background: rgba(250,251,253,0.92);
+      border-bottom-color: var(--sk-border);
+    }
+    .sk-nav-logo { color: var(--sk-accent); }
+    .sk-nav-logo span { color: var(--sk-text-1); }
+
+    /* ===== HERO: SPLIT (text left, calculator right) ===== */
+    .hero-split {
+      padding: 140px 0 80px;
+      display: grid; grid-template-columns: 1fr 420px; gap: 60px; align-items: center;
+    }
+    .hero-split h1 {
+      font-size: 3.2rem; font-weight: var(--sk-fw-black);
+      line-height: 1.1; letter-spacing: -1.5px; margin-bottom: var(--sk-space-lg);
+    }
+    .hero-split h1 em {
+      font-style: normal; background: var(--sk-gradient);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub { font-size: var(--sk-fs-md); color: var(--sk-text-2); line-height: 1.7; margin-bottom: var(--sk-space-xl); }
+    .hero-actions { display: flex; gap: var(--sk-space-md); margin-bottom: var(--sk-space-xl); }
+    .hero-proof { display: flex; gap: var(--sk-space-xl); font-size: var(--sk-fs-sm); color: var(--sk-text-3); }
+    .hero-proof strong { color: var(--sk-text-1); }
+
+    /* ROI Calculator */
+    .roi-calc {
+      background: var(--sk-bg-2); border: 1px solid var(--sk-border);
+      border-radius: var(--sk-radius-xl); padding: var(--sk-space-xl);
+      box-shadow: var(--sk-shadow-lg), 0 0 60px var(--sk-accent-glow);
+    }
+    .roi-calc h3 { font-size: var(--sk-fs-md); font-weight: var(--sk-fw-bold); margin-bottom: var(--sk-space-lg); text-align: center; }
+    .roi-field { margin-bottom: var(--sk-space-md); }
+    .roi-field label { display: block; font-size: var(--sk-fs-xs); font-weight: var(--sk-fw-semibold); color: var(--sk-text-2); margin-bottom: 6px; }
+    .roi-result {
+      margin-top: var(--sk-space-lg); padding: var(--sk-space-md);
+      background: var(--sk-success-light); border: 1px solid rgba(16,185,129,0.2);
+      border-radius: var(--sk-radius); text-align: center;
+    }
+    .roi-result-label { font-size: var(--sk-fs-xs); color: var(--sk-success); font-weight: var(--sk-fw-semibold); }
+    .roi-result-value { font-size: var(--sk-fs-2xl); font-weight: var(--sk-fw-black); color: var(--sk-success); }
+
+    /* ===== LOGOS STRIP ===== */
+    .logos-strip {
+      padding: var(--sk-space-xl) 0;
+      border-top: 1px solid var(--sk-border); border-bottom: 1px solid var(--sk-border);
+      background: var(--sk-bg-1);
+    }
+    .logos-strip-label { text-align: center; font-size: var(--sk-fs-xs); color: var(--sk-text-3); text-transform: uppercase; letter-spacing: 1.5px; font-weight: var(--sk-fw-bold); margin-bottom: var(--sk-space-md); }
+    .logos-track {
+      display: flex; gap: var(--sk-space-xl); overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+    .logos-slide { display: flex; gap: var(--sk-space-xl); animation: logoScroll 30s linear infinite; }
+    @keyframes logoScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .logo-item { flex-shrink: 0; font-size: var(--sk-fs-sm); font-weight: var(--sk-fw-bold); color: var(--sk-text-3); white-space: nowrap; opacity: 0.6; }
+
+    /* ===== BEFORE / AFTER (side by side, not cards) ===== */
+    .before-after { padding: var(--sk-space-3xl) 0; }
+    .ba-header { text-align: center; margin-bottom: var(--sk-space-2xl); }
+    .ba-header h2 { font-size: var(--sk-fs-2xl); font-weight: var(--sk-fw-black); margin-bottom: var(--sk-space-sm); }
+    .ba-grid { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; align-items: stretch; }
+    .ba-col {
+      padding: var(--sk-space-xl);
+      border-radius: var(--sk-radius-lg);
+    }
+    .ba-before { background: #fef2f2; border: 1px solid rgba(239,68,68,0.15); }
+    .ba-after { background: var(--sk-success-light); border: 1px solid rgba(16,185,129,0.15); }
+    .ba-divider {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; color: var(--sk-text-3);
+    }
+    .ba-label {
+      font-size: var(--sk-fs-xs); font-weight: var(--sk-fw-bold);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: var(--sk-space-lg);
+    }
+    .ba-before .ba-label { color: var(--sk-danger); }
+    .ba-after .ba-label { color: var(--sk-success); }
+    .ba-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
+      font-size: var(--sk-fs-sm); color: var(--sk-text-2);
+    }
+    .ba-item:last-child { border-bottom: none; }
+    .ba-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ===== FEATURES: TABS + MOCKUP ===== */
+    .feat-section {
+      padding: var(--sk-space-3xl) 0;
+      background: var(--sk-bg-1); border-top: 1px solid var(--sk-border); border-bottom: 1px solid var(--sk-border);
+    }
+    .feat-layout { display: grid; grid-template-columns: 340px 1fr; gap: var(--sk-space-2xl); align-items: start; }
+    .feat-tabs { display: flex; flex-direction: column; gap: 6px; }
+    .feat-tab {
+      padding: 16px 20px; background: transparent;
+      border: 1px solid transparent; border-radius: var(--sk-radius);
+      cursor: pointer; text-align: left; transition: all 0.2s; font-family: inherit;
+    }
+    .feat-tab:hover { background: rgba(0,0,0,0.02); }
+    .feat-tab.active {
+      background: var(--sk-bg-2); border-color: var(--sk-border);
+      box-shadow: var(--sk-shadow-sm);
+    }
+    .feat-tab h4 { font-size: var(--sk-fs-sm); font-weight: var(--sk-fw-bold); margin-bottom: 4px; }
+    .feat-tab p { font-size: var(--sk-fs-xs); color: var(--sk-text-3); line-height: 1.5; display: none; }
+    .feat-tab.active p { display: block; }
+    .feat-tab-icon { font-size: 1.1rem; margin-bottom: 6px; }
+
+    .feat-preview {
+      background: var(--sk-bg-2); border: 1px solid var(--sk-border);
+      border-radius: var(--sk-radius-xl); overflow: hidden;
+      box-shadow: var(--sk-shadow);
+      min-height: 400px; position: relative;
+    }
+    .feat-preview-bar {
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 16px; background: var(--sk-bg-1);
+      border-bottom: 1px solid var(--sk-border);
+    }
+    .fp-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .fp-dot:nth-child(1) { background: #ef4444; }
+    .fp-dot:nth-child(2) { background: #f59e0b; }
+    .fp-dot:nth-child(3) { background: #22c55e; }
+    .feat-screen { padding: var(--sk-space-lg); display: none; animation: fadeIn 0.3s ease; }
+    .feat-screen.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .mock-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    .mock-box {
+      flex: 1; padding: 14px; background: var(--sk-bg-1);
+      border: 1px solid var(--sk-border); border-radius: var(--sk-radius);
+    }
+    .mock-label { font-size: 0.65rem; color: var(--sk-text-3); text-transform: uppercase; letter-spacing: 0.5px; }
+    .mock-value { font-size: var(--sk-fs-lg); font-weight: var(--sk-fw-black); margin-top: 2px; }
+    .mock-list-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; border-bottom: 1px solid var(--sk-border);
+      font-size: var(--sk-fs-xs);
+    }
+    .mock-product {
+      display: flex; gap: 10px; padding: 10px;
+      background: var(--sk-bg-1); border: 1px solid var(--sk-border);
+      border-radius: var(--sk-radius); margin-bottom: 8px;
+    }
+    .mock-product-img { width: 48px; height: 48px; background: var(--sk-border); border-radius: 6px; }
+    .mock-product-name { font-size: var(--sk-fs-xs); font-weight: var(--sk-fw-semibold); }
+    .mock-product-price { font-size: var(--sk-fs-xs); color: var(--sk-accent); font-weight: var(--sk-fw-bold); }
+
+    /* ===== NUMBERS INLINE ===== */
+    .numbers-strip {
+      padding: var(--sk-space-2xl) 0;
+      display: flex; justify-content: center; gap: var(--sk-space-3xl);
+      text-align: center;
+    }
+    .num-item .big {
+      font-size: var(--sk-fs-3xl); font-weight: var(--sk-fw-black);
+      background: var(--sk-gradient); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1;
+    }
+    .num-item .label { font-size: var(--sk-fs-xs); color: var(--sk-text-3); margin-top: 4px; }
+
+    /* ===== TESTIMONIAL CAROUSEL ===== */
+    .test-section { padding: var(--sk-space-3xl) 0; background: var(--sk-bg-1); border-top: 1px solid var(--sk-border); border-bottom: 1px solid var(--sk-border); }
+    .test-header { text-align: center; margin-bottom: var(--sk-space-2xl); }
+    .test-header h2 { font-size: var(--sk-fs-2xl); font-weight: var(--sk-fw-black); }
+    .test-carousel { display: flex; gap: var(--sk-space-md); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--sk-space-md); -webkit-overflow-scrolling: touch; }
+    .test-carousel::-webkit-scrollbar { height: 4px; }
+    .test-carousel::-webkit-scrollbar-thumb { background: var(--sk-border); border-radius: 2px; }
+    .test-slide {
+      flex: 0 0 360px; scroll-snap-align: start;
+      background: var(--sk-bg-2); border: 1px solid var(--sk-border);
+      border-radius: var(--sk-radius-lg); padding: var(--sk-space-lg);
+    }
+    .test-quote { font-size: var(--sk-fs-sm); color: var(--sk-text-2); line-height: 1.7; font-style: italic; margin-bottom: var(--sk-space-md); }
+    .test-quote::before { content: '\201C'; font-size: 1.5rem; font-weight: var(--sk-fw-black); color: var(--sk-accent); line-height: 0; vertical-align: -5px; margin-right: 2px; }
+    .test-author { display: flex; align-items: center; gap: 10px; }
+    .test-avatar { width: 36px; height: 36px; border-radius: var(--sk-radius); background: var(--sk-gradient); display: flex; align-items: center; justify-content: center; font-weight: var(--sk-fw-bold); font-size: var(--sk-fs-xs); color: #fff; }
+    .test-name { font-weight: var(--sk-fw-semibold); font-size: var(--sk-fs-sm); }
+    .test-role { font-size: var(--sk-fs-xs); color: var(--sk-text-3); }
+
+    /* ===== PRICING ===== */
+    .pricing { padding: var(--sk-space-3xl) 0; }
+    .pricing-header { text-align: center; margin-bottom: var(--sk-space-2xl); }
+    .pricing-header h2 { font-size: var(--sk-fs-2xl); font-weight: var(--sk-fw-black); margin-bottom: var(--sk-space-sm); }
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sk-space-lg); max-width: 800px; margin: 0 auto; }
+    .price-card {
+      background: var(--sk-bg-2); border: 1px solid var(--sk-border);
+      border-radius: var(--sk-radius-xl); padding: var(--sk-space-xl);
+      position: relative; transition: all 0.25s;
+    }
+    .price-card:hover { transform: translateY(-4px); box-shadow: var(--sk-shadow-lg); }
+    .price-card.featured { border-color: var(--sk-accent); box-shadow: 0 0 40px var(--sk-accent-glow); }
+    .price-card.featured::before {
+      content: 'Mais Popular'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      padding: 4px 16px; background: var(--sk-accent); color: #fff;
+      border-radius: var(--sk-radius-full); font-size: var(--sk-fs-xs); font-weight: var(--sk-fw-bold);
+    }
+    .price-name { font-size: var(--sk-fs-lg); font-weight: var(--sk-fw-bold); margin-bottom: 4px; }
+    .price-desc { font-size: var(--sk-fs-xs); color: var(--sk-text-3); margin-bottom: var(--sk-space-lg); }
+    .price-value { font-size: var(--sk-fs-2xl); font-weight: var(--sk-fw-black); margin-bottom: 2px; }
+    .price-value small { font-size: var(--sk-fs-sm); font-weight: var(--sk-fw-normal); color: var(--sk-text-3); }
+    .price-setup { font-size: var(--sk-fs-xs); color: var(--sk-text-3); margin-bottom: var(--sk-space-lg); }
+    .price-features { list-style: none; margin-bottom: var(--sk-space-lg); }
+    .price-features li {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 0; font-size: var(--sk-fs-sm); color: var(--sk-text-2);
+      border-bottom: 1px solid var(--sk-border);
+    }
+    .price-features li:last-child { border-bottom: none; }
+    .pf-check { color: var(--sk-success); font-weight: var(--sk-fw-bold); }
+
+    /* ===== FAQ ACCORDION ===== */
+    .faq { padding: var(--sk-space-3xl) 0; background: var(--sk-bg-1); border-top: 1px solid var(--sk-border); border-bottom: 1px solid var(--sk-border); }
+    .faq-header { text-align: center; margin-bottom: var(--sk-space-2xl); }
+    .faq-header h2 { font-size: var(--sk-fs-2xl); font-weight: var(--sk-fw-black); }
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid var(--sk-border); }
+    .faq-q {
+      width: 100%; padding: 18px 0; background: none; border: none;
+      font-family: inherit; font-size: var(--sk-fs-sm); font-weight: var(--sk-fw-semibold);
+      color: var(--sk-text-1); text-align: left; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .faq-q::after { content: '+'; font-size: var(--sk-fs-lg); color: var(--sk-text-3); transition: transform 0.2s; }
+    .faq-item.open .faq-q::after { content: '\2212'; }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .faq-item.open .faq-a { max-height: 200px; }
+    .faq-a p { padding: 0 0 18px; font-size: var(--sk-fs-sm); color: var(--sk-text-3); line-height: 1.7; }
+
+    /* ===== CTA FINAL ===== */
+    .cta-final {
+      padding: var(--sk-space-3xl) 0; text-align: center;
+      background: linear-gradient(135deg, #0c0f1d 0%, #1a1040 100%);
+      color: #fff; position: relative; overflow: hidden;
+    }
+    .cta-final::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(108,60,224,0.25) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-final .sk-container { position: relative; z-index: 1; }
+    .cta-final h2 { font-size: var(--sk-fs-2xl); font-weight: var(--sk-fw-black); margin-bottom: var(--sk-space-md); }
+    .cta-final h2 em { font-style: normal; background: linear-gradient(135deg, #a855f7, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .cta-final p { color: rgba(255,255,255,0.5); margin-bottom: var(--sk-space-xl); }
+    .cta-buttons { display: flex; gap: var(--sk-space-md); justify-content: center; }
+    .cta-wpp {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; background: #25d366; color: #fff;
+      border-radius: var(--sk-radius); font-weight: var(--sk-fw-bold);
+      font-size: var(--sk-fs-sm); border: none; cursor: pointer;
+      transition: all 0.2s; font-family: inherit;
+    }
+    .cta-wpp:hover { background: #1fba59; transform: translateY(-1px); }
+
+    /* Footer */
+    .sk-footer { padding: var(--sk-space-xl) 0; border-top: 1px solid var(--sk-border); }
+    .footer-row { display: flex; justify-content: space-between; align-items: center; }
+    .footer-logo { font-size: var(--sk-fs-md); font-weight: var(--sk-fw-black); color: var(--sk-accent); }
+    .footer-logo span { color: var(--sk-text-1); }
+    .footer-links { display: flex; gap: var(--sk-space-lg); list-style: none; }
+    .footer-links a { font-size: var(--sk-fs-xs); color: var(--sk-text-3); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--sk-text-1); }
+    .footer-copy { font-size: var(--sk-fs-xs); color: var(--sk-text-3); margin-top: var(--sk-space-md); text-align: center; }
+
+    /* WhatsApp FAB */
+    .wpp-fab {
+      position: fixed; bottom: 24px; right: 24px; z-index: var(--sk-z-toast);
+      width: 54px; height: 54px; border-radius: 50%;
+      background: #25d366; color: #fff; border: none;
+      font-size: 1.5rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+      transition: transform 0.2s;
+    }
+    .wpp-fab:hover { transform: scale(1.08); }
+
+    /* Reveal */
+    .rv { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .rv.v { opacity: 1; transform: translateY(0); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-split { grid-template-columns: 1fr; gap: var(--sk-space-xl); }
+      .roi-calc { max-width: 420px; }
+      .feat-layout { grid-template-columns: 1fr; }
+      .ba-grid { grid-template-columns: 1fr; gap: var(--sk-space-md); }
+      .ba-divider { transform: rotate(90deg); padding: var(--sk-space-sm) 0; }
+    }
+    @media (max-width: 768px) {
+      .sk-nav-links { display: none; }
+      .hero-split h1 { font-size: var(--sk-fs-2xl); }
+      .hero-actions { flex-direction: column; }
+      .hero-proof { flex-direction: column; gap: var(--sk-space-sm); }
+      .numbers-strip { flex-wrap: wrap; gap: var(--sk-space-xl); }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .test-slide { flex: 0 0 300px; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .footer-row { flex-direction: column; gap: var(--sk-space-md); }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP PROMO BAR -->
+  <div class="top-bar">
+    Vagas limitadas para diagnóstico gratuito em Junho &mdash;<a href="#pricing">Ver planos</a>
+  </div>
+
+  <!-- NAV -->
+  <nav class="sk-nav" id="nav">
+    <div class="sk-container">
+      <a href="#" class="sk-nav-logo">Digital<span>B2B</span></a>
+      <ul class="sk-nav-links">
+        <li><a href="#como-funciona">Recursos</a></li>
+        <li><a href="#pricing">Planos</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <a href="portal/login.html" class="sk-btn sk-btn-ghost sk-btn-sm">Demo</a>
+        <a href="#contato" class="sk-btn sk-btn-primary sk-btn-sm">Falar com Especialista</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO: Split layout -->
+  <section class="sk-container">
+    <div class="hero-split">
+      <div class="rv">
+        <h1>Seus clientes fazem pedidos <em>online, 24h,</em> direto no catálogo</h1>
+        <p class="hero-sub">Portal B2B com sua marca, catálogo digital e integração ERP. Venda enquanto dorme.</p>
+        <div class="hero-actions">
+          <a href="#contato" class="sk-btn sk-btn-primary sk-btn-lg">Quero vender online &rarr;</a>
+          <a href="portal/login.html" class="sk-btn sk-btn-secondary sk-btn-lg">&#9654; Ver demo</a>
+        </div>
+        <div class="hero-proof">
+          <div><strong>+350</strong> distribuidores</div>
+          <div><strong>+R$ 2bi</strong> transacionados</div>
+          <div><strong>+1M</strong> pedidos</div>
+        </div>
+      </div>
+
+      <!-- ROI Calculator -->
+      <div class="roi-calc rv">
+        <h3>Quanto você perde por mês?</h3>
+        <div class="roi-field">
+          <label>Pedidos/dia por telefone/WhatsApp</label>
+          <input type="range" id="roiOrders" min="5" max="200" value="30" style="width:100%;">
+          <div style="display:flex; justify-content:space-between; font-size:var(--sk-fs-xs); color:var(--sk-text-3);"><span>5</span><span id="roiOrdersVal">30</span><span>200</span></div>
+        </div>
+        <div class="roi-field">
+          <label>Ticket médio (R$)</label>
+          <input type="range" id="roiTicket" min="100" max="5000" value="800" step="50" style="width:100%;">
+          <div style="display:flex; justify-content:space-between; font-size:var(--sk-fs-xs); color:var(--sk-text-3);"><span>R$100</span><span id="roiTicketVal">R$800</span><span>R$5.000</span></div>
+        </div>
+        <div class="roi-result">
+          <div class="roi-result-label">Receita perdida fora do horário</div>
+          <div class="roi-result-value" id="roiValue">R$ 7.200/mês</div>
+          <div style="font-size:var(--sk-fs-xs); color:var(--sk-success); margin-top:4px;">35% dos pedidos acontecem fora do expediente</div>
+        </div>
+        <a href="#contato" class="sk-btn sk-btn-primary sk-btn-block" style="margin-top:var(--sk-space-md);">Recuperar essa receita &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGOS STRIP -->
+  <div class="logos-strip rv">
+    <div class="logos-strip-label">Integração nativa com</div>
+    <div class="logos-track">
+      <div class="logos-slide" id="logoSlide"></div>
+    </div>
+  </div>
+
+  <!-- BEFORE / AFTER -->
+  <section class="before-after sk-container">
+    <div class="ba-header rv">
+      <h2>Antes vs Depois do portal digital</h2>
+    </div>
+    <div class="ba-grid rv">
+      <div class="ba-col ba-before">
+        <div class="ba-label">&#10007; Sem portal</div>
+        <div class="ba-item"><span class="ba-icon">&#9203;</span><span>Vendas só no horário comercial (8h/dia)</span></div>
+        <div class="ba-item"><span class="ba-icon">&#128172;</span><span>Pedidos por WhatsApp, áudio e planilha</span></div>
+        <div class="ba-item"><span class="ba-icon">&#128683;</span><span>Erros de digitação e retrabalho constante</span></div>
+        <div class="ba-item"><span class="ba-icon">&#128064;</span><span>Cliente não vê seu catálogo completo</span></div>
+        <div class="ba-item"><span class="ba-icon">&#128200;</span><span>Zero dados sobre comportamento de compra</span></div>
+        <div class="ba-item"><span class="ba-icon">&#128176;</span><span>Escalar = contratar mais vendedores</span></div>
+      </div>
+      <div class="ba-divider">&rarr;</div>
+      <div class="ba-col ba-after">
+        <div class="ba-label">&#10003; Com DigitalB2B</div>
+        <div class="ba-item"><span class="ba-icon">&#127760;</span><span>Vendas 24h, incluindo fins de semana</span></div>
+        <div class="ba-item"><span class="ba-icon">&#128187;</span><span>Pedidos digitais direto no ERP</span></div>
+        <div class="ba-item"><span class="ba-icon">&#10003;</span><span>Zero retrabalho, zero redigitação</span></div>
+        <div class="ba-item"><span class="ba-icon">&#128214;</span><span>Catálogo completo com busca inteligente</span></div>
+        <div class="ba-item"><span class="ba-icon">&#128202;</span><span>Dashboard com dados em tempo real</span></div>
+        <div class="ba-item"><span class="ba-icon">&#128640;</span><span>Escalar = ligar o portal para mais clientes</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES: Tabs + Live Preview -->
+  <section class="feat-section" id="como-funciona">
+    <div class="sk-container">
+      <div style="text-align:center; margin-bottom:var(--sk-space-2xl);">
+        <h2 style="font-size:var(--sk-fs-2xl); font-weight:var(--sk-fw-black);" class="rv">Veja o portal funcionando</h2>
+        <p style="color:var(--sk-text-3); font-size:var(--sk-fs-md);" class="rv">Clique nas funcionalidades para ver como cada tela funciona.</p>
+      </div>
+      <div class="feat-layout rv">
+        <div class="feat-tabs" id="featTabs">
+          <button class="feat-tab active" data-screen="screen-dashboard">
+            <div class="feat-tab-icon">&#128202;</div>
+            <h4>Dashboard</h4>
+            <p>Acompanhe vendas, pedidos e clientes em tempo real.</p>
+          </button>
+          <button class="feat-tab" data-screen="screen-catalogo">
+            <div class="feat-tab-icon">&#128214;</div>
+            <h4>Catálogo Digital</h4>
+            <p>Seus produtos organizados com busca, filtros e fotos.</p>
+          </button>
+          <button class="feat-tab" data-screen="screen-pedidos">
+            <div class="feat-tab-icon">&#128230;</div>
+            <h4>Gestão de Pedidos</h4>
+            <p>Pedidos entram automático, sem redigitação manual.</p>
+          </button>
+          <button class="feat-tab" data-screen="screen-politicas">
+            <div class="feat-tab-icon">&#128176;</div>
+            <h4>Políticas Comerciais</h4>
+            <p>Tabelas de preço, descontos e condições por perfil.</p>
+          </button>
+          <button class="feat-tab" data-screen="screen-erp">
+            <div class="feat-tab-icon">&#128279;</div>
+            <h4>Integração ERP</h4>
+            <p>Winthor, SAP, Protheus, Sankhya, Omie e +10 ERPs.</p>
+          </button>
+        </div>
+        <div class="feat-preview">
+          <div class="feat-preview-bar"><span class="fp-dot"></span><span class="fp-dot"></span><span class="fp-dot"></span></div>
+          <div class="feat-screen active" id="screen-dashboard">
+            <div class="mock-row">
+              <div class="mock-box"><div class="mock-label">Pedidos Hoje</div><div class="mock-value">247</div></div>
+              <div class="mock-box"><div class="mock-label">Faturamento</div><div class="mock-value">R$ 184k</div></div>
+              <div class="mock-box"><div class="mock-label">Ticket Médio</div><div class="mock-value">R$ 745</div></div>
+            </div>
+            <div style="background:var(--sk-bg-1); border:1px solid var(--sk-border); border-radius:var(--sk-radius); overflow:hidden;">
+              <div style="padding:10px 14px; font-size:var(--sk-fs-xs); font-weight:var(--sk-fw-bold); border-bottom:1px solid var(--sk-border);">Atividade Recente</div>
+              <div class="mock-list-item"><span>Pedido #4872 &mdash; Mercearia São Jorge</span><span style="color:var(--sk-success); font-weight:var(--sk-fw-bold);">R$ 3.240</span></div>
+              <div class="mock-list-item"><span>Pedido #4871 &mdash; Supermix Atacado</span><span style="color:var(--sk-success); font-weight:var(--sk-fw-bold);">R$ 8.150</span></div>
+              <div class="mock-list-item"><span>Pedido #4870 &mdash; Casa &amp; Sabor</span><span style="color:var(--sk-success); font-weight:var(--sk-fw-bold);">R$ 1.890</span></div>
+            </div>
+          </div>
+          <div class="feat-screen" id="screen-catalogo">
+            <div style="padding:8px 12px; background:var(--sk-bg-1); border:1px solid var(--sk-border); border-radius:var(--sk-radius); margin-bottom:14px; font-size:var(--sk-fs-xs); color:var(--sk-text-3);">&#128269; Buscar produtos...</div>
+            <div class="mock-product"><div class="mock-product-img"></div><div><div class="mock-product-name">Arroz Tio João 5kg</div><div class="mock-product-price">R$ 22,90</div><div style="font-size:0.65rem; color:var(--sk-text-3);">Estoque: 1.240 un</div></div></div>
+            <div class="mock-product"><div class="mock-product-img"></div><div><div class="mock-product-name">Óleo Soja Liza 900ml</div><div class="mock-product-price">R$ 8,49</div><div style="font-size:0.65rem; color:var(--sk-text-3);">Estoque: 3.800 un</div></div></div>
+            <div class="mock-product"><div class="mock-product-img"></div><div><div class="mock-product-name">Açúcar União 1kg</div><div class="mock-product-price">R$ 5,29</div><div style="font-size:0.65rem; color:var(--sk-text-3);">Estoque: 2.100 un</div></div></div>
+            <div class="mock-product"><div class="mock-product-img"></div><div><div class="mock-product-name">Leite Integral Italac 1L</div><div class="mock-product-price">R$ 6,79</div><div style="font-size:0.65rem; color:var(--sk-text-3);">Estoque: 5.600 un</div></div></div>
+          </div>
+          <div class="feat-screen" id="screen-pedidos">
+            <div style="font-size:var(--sk-fs-sm); font-weight:var(--sk-fw-bold); margin-bottom:12px;">Pedidos Recentes</div>
+            <div class="mock-list-item"><span>#4872</span><span>Mercearia São Jorge</span><span class="sk-badge sk-badge-success">Aprovado</span><span>R$ 3.240</span></div>
+            <div class="mock-list-item"><span>#4871</span><span>Supermix Atacado</span><span class="sk-badge sk-badge-warning">Separação</span><span>R$ 8.150</span></div>
+            <div class="mock-list-item"><span>#4870</span><span>Casa &amp; Sabor</span><span class="sk-badge sk-badge-info">Entregue</span><span>R$ 1.890</span></div>
+            <div class="mock-list-item"><span>#4869</span><span>Distac NE</span><span class="sk-badge sk-badge-success">Aprovado</span><span>R$ 12.300</span></div>
+          </div>
+          <div class="feat-screen" id="screen-politicas">
+            <div style="font-size:var(--sk-fs-sm); font-weight:var(--sk-fw-bold); margin-bottom:12px;">Tabelas de Preço Ativas</div>
+            <div class="mock-list-item"><span>Tabela Varejo</span><span class="sk-badge sk-badge-primary">324 clientes</span></div>
+            <div class="mock-list-item"><span>Tabela Atacado (50+ un)</span><span class="sk-badge sk-badge-primary">89 clientes</span></div>
+            <div class="mock-list-item"><span>Tabela VIP</span><span class="sk-badge sk-badge-success">12 clientes</span></div>
+            <div style="margin-top:14px; padding:12px; background:var(--sk-bg-1); border:1px solid var(--sk-border); border-radius:var(--sk-radius); font-size:var(--sk-fs-xs); color:var(--sk-text-3);">Desconto automático: 5% acima de R$ 2.000 &middot; 10% acima de R$ 5.000</div>
+          </div>
+          <div class="feat-screen" id="screen-erp">
+            <div style="font-size:var(--sk-fs-sm); font-weight:var(--sk-fw-bold); margin-bottom:12px;">Status das Integrações</div>
+            <div class="mock-list-item"><span>&#128994; Winthor</span><span class="sk-badge sk-badge-success">Conectado</span><span style="font-size:var(--sk-fs-xs); color:var(--sk-text-3);">Sync 2min atrás</span></div>
+            <div class="mock-list-item"><span>&#128994; Estoque</span><span class="sk-badge sk-badge-success">Tempo real</span><span style="font-size:var(--sk-fs-xs); color:var(--sk-text-3);">1.240 SKUs</span></div>
+            <div class="mock-list-item"><span>&#128994; Pedidos</span><span class="sk-badge sk-badge-success">Automático</span><span style="font-size:var(--sk-fs-xs); color:var(--sk-text-3);">247 hoje</span></div>
+            <div class="mock-list-item"><span>&#128994; Preços</span><span class="sk-badge sk-badge-success">Sincronizado</span><span style="font-size:var(--sk-fs-xs); color:var(--sk-text-3);">3 tabelas</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUMBERS INLINE -->
+  <div class="numbers-strip sk-container rv">
+    <div class="num-item"><div class="big"><span class="ctr" data-target="350">0</span>+</div><div class="label">Distribuidores</div></div>
+    <div class="num-item"><div class="big"><span class="ctr" data-target="50">0</span>mil</div><div class="label">Compradores</div></div>
+    <div class="num-item"><div class="big"><span class="ctr" data-target="80">0</span>%</div><div class="label">Menos retrabalho</div></div>
+    <div class="num-item"><div class="big"><span class="ctr" data-target="35">0</span>%</div><div class="label">Vendas fora do horário</div></div>
+  </div>
+
+  <!-- TESTIMONIALS: Horizontal carousel -->
+  <section class="test-section">
+    <div class="sk-container">
+      <div class="test-header rv"><h2>O que dizem nossos clientes</h2></div>
+      <div class="test-carousel rv">
+        <div class="test-slide">
+          <div class="sk-badge sk-badge-success" style="margin-bottom:12px;">+40% pedidos recorrentes</div>
+          <p class="test-quote">Nossos clientes fazem pedidos sozinhos, a qualquer hora. A equipe comercial foca em novos clientes.</p>
+          <div class="test-author"><div class="test-avatar">LC</div><div><div class="test-name">Lígia Coutinho</div><div class="test-role">Diretora Comercial &mdash; Distac</div></div></div>
+        </div>
+        <div class="test-slide">
+          <div class="sk-badge sk-badge-success" style="margin-bottom:12px;">100% digital em 3 semanas</div>
+          <p class="test-quote">Saímos do WhatsApp para um portal profissional em 3 semanas. Nosso cliente tem autonomia total.</p>
+          <div class="test-author"><div class="test-avatar">CA</div><div><div class="test-name">Carina Araújo</div><div class="test-role">Gestora E-commerce &mdash; AC Araújo</div></div></div>
+        </div>
+        <div class="test-slide">
+          <div class="sk-badge sk-badge-success" style="margin-bottom:12px;">3x mais pedidos</div>
+          <p class="test-quote">Triplicamos o volume de pedidos sem contratar ninguém. O portal virou nosso principal canal.</p>
+          <div class="test-author"><div class="test-avatar">PG</div><div><div class="test-name">Patrick Guzzo</div><div class="test-role">CEO &mdash; Cescom Distribuidor</div></div></div>
+        </div>
+        <div class="test-slide">
+          <div class="sk-badge sk-badge-success" style="margin-bottom:12px;">ROI em 45 dias</div>
+          <p class="test-quote">O portal se pagou em 45 dias. Hoje faturamos R$ 180k/mês só pelo canal digital.</p>
+          <div class="test-author"><div class="test-avatar">RM</div><div><div class="test-name">Rafael Mendes</div><div class="test-role">Diretor &mdash; Atacado Baiano</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="sk-container">
+      <div class="pricing-header rv">
+        <h2>Planos que cabem na sua operação</h2>
+        <p style="color:var(--sk-text-3);">Sem taxa por pedido. Sem surpresas.</p>
+      </div>
+      <div class="pricing-grid rv">
+        <div class="price-card">
+          <div class="price-name">Self-Service</div>
+          <div class="price-desc">Você configura, nós fornecemos a plataforma</div>
+          <div class="price-value">R$ 197<small>/mês</small></div>
+          <div class="price-setup">Sem taxa de setup</div>
+          <ul class="price-features">
+            <li><span class="pf-check">&#10003;</span> Portal com sua marca</li>
+            <li><span class="pf-check">&#10003;</span> Catálogo digital ilimitado</li>
+            <li><span class="pf-check">&#10003;</span> Pedidos 24h online</li>
+            <li><span class="pf-check">&#10003;</span> Dashboard de vendas</li>
+            <li><span class="pf-check">&#10003;</span> Suporte por e-mail</li>
+          </ul>
+          <a href="#contato" class="sk-btn sk-btn-secondary sk-btn-block">Começar agora</a>
+        </div>
+        <div class="price-card featured">
+          <div class="price-name">Premium</div>
+          <div class="price-desc">Nós configuramos tudo para você</div>
+          <div class="price-value">R$ 197<small>/mês</small></div>
+          <div class="price-setup">Setup: R$ 1.500 (único)</div>
+          <ul class="price-features">
+            <li><span class="pf-check">&#10003;</span> Tudo do Self-Service</li>
+            <li><span class="pf-check">&#10003;</span> Integração ERP completa</li>
+            <li><span class="pf-check">&#10003;</span> Multi-tabela de preço</li>
+            <li><span class="pf-check">&#10003;</span> Configuração do catálogo</li>
+            <li><span class="pf-check">&#10003;</span> Treinamento da equipe</li>
+            <li><span class="pf-check">&#10003;</span> Suporte prioritário</li>
+          </ul>
+          <a href="#contato" class="sk-btn sk-btn-primary sk-btn-block">Falar com especialista</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="sk-container">
+      <div class="faq-header rv"><h2>Perguntas Frequentes</h2></div>
+      <div class="faq-list rv">
+        <div class="faq-item"><button class="faq-q">Quanto tempo leva para o portal ficar pronto?</button><div class="faq-a"><p>No plano Premium, o portal fica pronto em 2 a 4 semanas. No Self-Service, você pode configurar e começar a vender no mesmo dia.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Preciso ter ERP para usar?</button><div class="faq-a"><p>Não. O portal funciona de forma independente. A integração com ERP é um diferencial do plano Premium, mas não é obrigatória.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Tem taxa por pedido?</button><div class="faq-a"><p>Não. Você paga apenas a mensalidade fixa. Pode receber 10 ou 10.000 pedidos por mês sem custo adicional.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Meu cliente precisa instalar algum app?</button><div class="faq-a"><p>Não. O portal funciona 100% no navegador, tanto no celular quanto no computador. Nenhuma instalação necessária.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Posso personalizar com a marca da minha empresa?</button><div class="faq-a"><p>Sim. Logo, cores, domínio próprio — tudo com a identidade da sua distribuidora. Seu cliente nunca vê a marca DigitalB2B.</p></div></div>
+        <div class="faq-item"><button class="faq-q">E se eu quiser cancelar?</button><div class="faq-a"><p>Sem fidelidade. Cancele quando quiser. Seus dados ficam disponíveis por 30 dias para exportação.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-final" id="contato">
+    <div class="sk-container">
+      <h2 class="rv">Pronto para vender <em>online 24h?</em></h2>
+      <p class="rv">Diagnóstico gratuito &mdash; descubra quanto você perde sem um portal digital.</p>
+      <div class="cta-buttons rv">
+        <a href="https://wa.me/5571999999999" class="cta-wpp" target="_blank">&#128172; Falar no WhatsApp</a>
+        <a href="portal/login.html" class="sk-btn sk-btn-secondary sk-btn-lg" style="color:#fff; border-color:rgba(255,255,255,0.2);">Ver demo do portal</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER (compact) -->
+  <footer class="sk-footer">
+    <div class="sk-container">
+      <div class="footer-row">
+        <div class="footer-logo">Digital<span>B2B</span></div>
+        <ul class="footer-links">
+          <li><a href="#como-funciona">Recursos</a></li>
+          <li><a href="#pricing">Planos</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="portal/login.html">Demo</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-copy">&copy; 2026 DigitalB2B. Todos os direitos reservados.</div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp FAB -->
+  <a href="https://wa.me/5571999999999" class="wpp-fab" target="_blank" aria-label="WhatsApp">&#128172;</a>
+
+  <script src="sitekit/js/ui.js"></script>
+  <script>
+    SK.init();
+    SK.initNavScroll('.sk-nav');
+
+    // Reveal
+    const rvObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('v'); rvObs.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.rv').forEach(el => rvObs.observe(el));
+
+    // Counter
+    const ctrObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target, target = parseInt(el.dataset.target), start = performance.now();
+        const run = now => {
+          const p = Math.min((now - start) / 2000, 1);
+          el.textContent = Math.floor(target * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(run);
+        };
+        requestAnimationFrame(run);
+        ctrObs.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.ctr').forEach(el => ctrObs.observe(el));
+
+    // Logo carousel
+    const erps = ['Winthor', 'SAP B1', 'Protheus', 'Sankhya', 'Omie', 'Consinco', 'Bling', 'Tiny ERP', 'Citel', 'Linx'];
+    document.getElementById('logoSlide').innerHTML = [...erps, ...erps].map(n => `<span class="logo-item">${n}</span>`).join('');
+
+    // ROI Calculator
+    const roiOrders = document.getElementById('roiOrders');
+    const roiTicket = document.getElementById('roiTicket');
+    const roiValue = document.getElementById('roiValue');
+    const roiOrdersVal = document.getElementById('roiOrdersVal');
+    const roiTicketVal = document.getElementById('roiTicketVal');
+
+    function calcROI() {
+      const orders = parseInt(roiOrders.value);
+      const ticket = parseInt(roiTicket.value);
+      const lost = Math.round(orders * ticket * 0.35 * 22);
+      roiOrdersVal.textContent = orders;
+      roiTicketVal.textContent = 'R$' + ticket.toLocaleString('pt-BR');
+      roiValue.textContent = 'R$ ' + lost.toLocaleString('pt-BR') + '/mês';
+    }
+    roiOrders.addEventListener('input', calcROI);
+    roiTicket.addEventListener('input', calcROI);
+    calcROI();
+
+    // Feature tabs
+    document.getElementById('featTabs').addEventListener('click', e => {
+      const tab = e.target.closest('.feat-tab');
+      if (!tab) return;
+      document.querySelectorAll('.feat-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.feat-screen').forEach(s => s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.screen)?.classList.add('active');
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+  </script>
+
+</body>
+</html>

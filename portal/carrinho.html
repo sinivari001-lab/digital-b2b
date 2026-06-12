@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho — Portal de Compras B2B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+  <header class="store-header" id="storeHeader"></header>
+
+  <div class="page-container">
+    <div class="page-breadcrumb">
+      <a href="catalogo.html">Início</a> / Carrinho de Compras
+    </div>
+
+    <div class="page-title-bar">
+      <div>
+        <h1 class="page-title">Carrinho de Compras</h1>
+        <p class="page-subtitle" id="cartSubtitle"></p>
+      </div>
+      <a href="catalogo.html" class="btn btn-secondary btn-sm">← Continuar comprando</a>
+    </div>
+
+    <div class="cart-layout" id="cartLayout"></div>
+  </div>
+
+  <footer class="store-footer" id="storeFooter"></footer>
+
+  <!-- Order Success Modal -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal">
+      <h2>✅ Pedido Realizado com Sucesso!</h2>
+      <p id="orderModalText"></p>
+      <div class="modal-actions">
+        <a href="pedidos.html" class="btn btn-primary btn-sm">Ver Meus Pedidos →</a>
+        <a href="catalogo.html" class="btn btn-secondary btn-sm">Continuar Comprando</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/portal.js"></script>
+  <script>
+    Portal.renderStoreHeader();
+    Portal.renderStoreFooter();
+    renderCart();
+
+    function renderCart() {
+      const cart = Portal.getCart();
+      const layout = document.getElementById('cartLayout');
+      const subtitle = document.getElementById('cartSubtitle');
+
+      if (cart.length === 0) {
+        subtitle.textContent = '';
+        layout.innerHTML = `
+          <div class="cart-empty" style="grid-column:1/-1;">
+            <div class="cart-empty-icon">🛒</div>
+            <h3>Seu carrinho está vazio</h3>
+            <p>Adicione produtos do catálogo para fazer um pedido.</p>
+            <br>
+            <a href="catalogo.html" class="btn btn-primary btn-sm">Ir para o Catálogo →</a>
+          </div>
+        `;
+        return;
+      }
+
+      subtitle.textContent = `${cart.length} ite${cart.length > 1 ? 'ns' : 'm'} no carrinho`;
+
+      const items = cart.map(item => {
+        const p = PRODUCTS.find(prod => prod.id === item.productId);
+        if (!p) return '';
+        const total = p.price * item.qty;
+        const icon = Portal.getCategoryIcon(p.category);
+
+        return `
+          <div class="cart-item" data-id="${p.id}">
+            <div class="cart-item-image">${icon}</div>
+            <div class="cart-item-info">
+              <div class="cart-item-name">${p.name}</div>
+              <div class="cart-item-brand">${p.brand} · ${p.sku}</div>
+              <div class="cart-item-unit-price">${Portal.formatCurrency(p.price)} / ${p.unit}</div>
+            </div>
+            <div class="qty-control">
+              <button onclick="updateQty(${p.id}, ${-p.minOrder})">−</button>
+              <input type="number" value="${item.qty}" min="${p.minOrder}" step="${p.minOrder}"
+                onchange="setQty(${p.id}, this.value, ${p.minOrder})">
+              <button onclick="updateQty(${p.id}, ${p.minOrder})">+</button>
+            </div>
+            <div class="cart-item-total">${Portal.formatCurrency(total)}</div>
+            <button class="cart-item-remove" onclick="removeItem(${p.id})" title="Remover">✕</button>
+          </div>
+        `;
+      }).join('');
+
+      const total = Portal.getCartTotal();
+      const itemCount = cart.reduce((sum, i) => sum + i.qty, 0);
+      const freeShipping = total >= 500;
+
+      layout.innerHTML = `
+        <div class="cart-items">${items}</div>
+        <div class="cart-summary">
+          <h3>Resumo do Pedido</h3>
+          <div class="summary-row">
+            <span class="label">Subtotal (${itemCount} un)</span>
+            <span class="value">${Portal.formatCurrency(total)}</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">Frete</span>
+            <span class="value green">${freeShipping ? 'Grátis' : 'R$ 29,90'}</span>
+          </div>
+          ${!freeShipping ? `<p style="font-size:0.75rem; color:var(--accent); margin-top:4px;">Faltam ${Portal.formatCurrency(500 - total)} para frete grátis</p>` : ''}
+          <div class="summary-row total">
+            <span>Total</span>
+            <span class="value">${Portal.formatCurrency(total + (freeShipping ? 0 : 29.90))}</span>
+          </div>
+
+          <div class="form-group" style="margin-top:20px;">
+            <label for="payment">Forma de Pagamento</label>
+            <select id="payment">
+              <option value="boleto">Boleto Bancário</option>
+              <option value="pix">PIX (5% desconto)</option>
+              <option value="prazo">Faturado 30 dias</option>
+            </select>
+          </div>
+
+          <button class="checkout-btn" onclick="checkout()">
+            Finalizar Pedido →
+          </button>
+          <p class="checkout-trust">🔒 Pedido seguro · Entrega em até 3 dias úteis</p>
+        </div>
+      `;
+    }
+
+    function updateQty(productId, delta) {
+      const cart = Portal.getCart();
+      const item = cart.find(i => i.productId === productId);
+      const product = PRODUCTS.find(p => p.id === productId);
+      if (!item || !product) return;
+      const newQty = item.qty + delta;
+      if (newQty < product.minOrder) { removeItem(productId); return; }
+      Portal.updateCartItem(productId, newQty);
+      renderCart();
+    }
+
+    function setQty(productId, value, minOrder) {
+      let qty = parseInt(value);
+      if (isNaN(qty) || qty < minOrder) qty = minOrder;
+      Portal.updateCartItem(productId, qty);
+      renderCart();
+    }
+
+    function removeItem(productId) {
+      Portal.removeFromCart(productId);
+      Portal.toast('Item removido do carrinho', 'success');
+      renderCart();
+    }
+
+    function checkout() {
+      const payment = document.getElementById('payment').value;
+      const order = Portal.placeOrder(payment);
+      if (order) {
+        document.getElementById('orderModalText').textContent =
+          `Pedido #${order.id} registrado com sucesso! Total: ${Portal.formatCurrency(order.total)}. Previsão de entrega: ${Portal.formatDate(order.deliveryDate)}.`;
+        document.getElementById('orderModal').classList.add('open');
+      }
+    }
+
+    document.getElementById('orderModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) e.target.classList.remove('open');
+    });
+  </script>
+</body>
+</html>

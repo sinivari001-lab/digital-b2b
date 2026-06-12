@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio — Portal de Compras B2B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/portal.css">
+  <style>
+    /* ===== TOP INFO BAR ===== */
+    .info-bar {
+      background: var(--bg-header); color: #94a3b8;
+      font-size: 0.72rem; padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .info-bar-inner {
+      max-width: 1400px; margin: 0 auto; padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .info-bar-left { display: flex; align-items: center; gap: 20px; }
+    .info-bar-left a { color: #94a3b8; display: flex; align-items: center; gap: 4px; }
+    .info-bar-left a:hover { color: #fff; }
+    .info-bar-right { display: flex; align-items: center; gap: 14px; }
+    .info-bar-right span { color: #64748b; }
+
+    /* ===== HERO CAROUSEL ===== */
+    .hero-carousel {
+      position: relative; overflow: hidden; background: #0c1020;
+    }
+    .hc-slides { display: flex; transition: transform 0.5s ease; }
+    .hc-slide {
+      min-width: 100%; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .hc-slide-content {
+      max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 32px;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 280px; position: relative;
+    }
+    /* Placeholder styles for each slide */
+    .hc-placeholder {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; text-align: center; padding: 40px;
+    }
+    .hc-placeholder-icon { font-size: 3rem; }
+    .hc-placeholder-title {
+      font-size: 1.5rem; font-weight: 800; color: #f1f5f9;
+      letter-spacing: -0.5px;
+    }
+    .hc-placeholder-sub { font-size: 0.88rem; color: #64748b; }
+    .hc-placeholder-hint {
+      font-size: 0.7rem; color: #475569; margin-top: 8px;
+      padding: 4px 12px; border: 1px dashed #334155; border-radius: 4px;
+    }
+    .hc-slide:nth-child(1) { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+    .hc-slide:nth-child(2) { background: linear-gradient(135deg, #0c2340 0%, #1e3a5f 100%); }
+    .hc-slide:nth-child(3) { background: linear-gradient(135deg, #1a0f2e 0%, #2d1b4e 100%); }
+    .hc-slide:nth-child(4) { background: linear-gradient(135deg, #0f2918 0%, #1a3d25 100%); }
+
+    .hc-dots {
+      position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 2;
+    }
+    .hc-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(255,255,255,0.2); border: none; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .hc-dot.active { background: #fff; width: 28px; border-radius: 5px; }
+    .hc-arrows {
+      position: absolute; top: 50%; width: 100%; padding: 0 16px;
+      display: flex; justify-content: space-between;
+      transform: translateY(-50%); pointer-events: none; z-index: 2;
+    }
+    .hc-arrow {
+      width: 40px; height: 40px; border-radius: 50%; border: none;
+      background: rgba(0,0,0,0.4); color: #fff; font-size: 1.2rem;
+      cursor: pointer; pointer-events: all; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .hc-arrow:hover { background: rgba(0,0,0,0.7); }
+
+    /* ===== INFO STRIP (frete, pix, entrega) ===== */
+    .info-strip {
+      background: var(--bg-white); border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+    .info-strip-inner {
+      max-width: 1400px; margin: 0 auto; padding: 0 32px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+    .is-item {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.82rem;
+    }
+    .is-icon {
+      width: 40px; height: 40px; border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+      background: var(--accent-light);
+    }
+    .is-text { font-weight: 600; color: var(--text-dark); line-height: 1.3; }
+    .is-sub { font-size: 0.72rem; color: var(--text-muted); font-weight: 400; }
+
+    /* ===== CATEGORIES GRID ===== */
+    .cats-section {
+      max-width: 1400px; margin: 0 auto; padding: 32px;
+    }
+    .section-title {
+      font-size: 1.2rem; font-weight: 700; color: var(--text-dark);
+      margin-bottom: 20px; display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .section-title a { font-size: 0.82rem; color: var(--accent); font-weight: 600; }
+    .section-title a:hover { text-decoration: underline; }
+    .cats-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .cat-card {
+      background: var(--bg-white); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 20px 14px;
+      text-align: center; transition: all 0.2s; cursor: pointer; display: block;
+    }
+    .cat-card:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-3px); }
+    .cat-card-icon { font-size: 2rem; margin-bottom: 8px; }
+    .cat-card-name { font-size: 0.82rem; font-weight: 600; color: var(--text-dark); }
+    .cat-card-count { font-size: 0.68rem; color: var(--text-light); margin-top: 2px; }
+
+    /* ===== BANNER ROW (two side by side) ===== */
+    .banner-row {
+      max-width: 1400px; margin: 0 auto; padding: 0 32px 32px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .banner-slot {
+      border-radius: var(--radius-lg); overflow: hidden;
+      cursor: pointer; transition: all 0.2s; position: relative;
+    }
+    .banner-slot:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .banner-slot-placeholder {
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+      padding: 32px; border: 2px dashed var(--border); border-radius: var(--radius-lg);
+      min-height: 140px;
+    }
+    .banner-slot-placeholder .bs-icon { font-size: 1.8rem; }
+    .banner-slot-placeholder .bs-text { font-size: 0.85rem; font-weight: 600; color: var(--text-body); }
+    .banner-slot-placeholder .bs-hint { font-size: 0.7rem; color: var(--text-muted); }
+    .banner-slot:nth-child(odd) .banner-slot-placeholder { background: linear-gradient(135deg, #eff6ff, #f0f9ff); }
+    .banner-slot:nth-child(even) .banner-slot-placeholder { background: linear-gradient(135deg, #ecfdf5, #f0fdf4); }
+    .banner-slot img { width: 100%; height: auto; display: block; }
+
+    /* ===== FULL WIDTH BANNER ===== */
+    .banner-full {
+      max-width: 1400px; margin: 0 auto; padding: 0 32px 32px;
+    }
+    .banner-full-inner {
+      border-radius: var(--radius-lg); overflow: hidden;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .banner-full-inner:hover { box-shadow: var(--shadow-lg); }
+    .banner-full-placeholder {
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+      padding: 36px; border: 2px dashed var(--border); border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #fef3c7, #fef9c3);
+    }
+    .banner-full-placeholder .bf-icon { font-size: 2rem; }
+    .banner-full-placeholder .bf-text { font-size: 0.9rem; font-weight: 600; color: var(--text-body); }
+    .banner-full-placeholder .bf-hint { font-size: 0.72rem; color: var(--text-muted); }
+    .banner-full-inner img { width: 100%; height: auto; display: block; }
+
+    /* ===== PRODUCTS FEATURED ===== */
+    .products-section {
+      max-width: 1400px; margin: 0 auto; padding: 0 32px 32px;
+    }
+    .products-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 14px;
+    }
+    .pcard {
+      background: var(--bg-white); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 16px;
+      transition: all 0.2s; cursor: pointer;
+    }
+    .pcard:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-2px); }
+    .pcard-img {
+      width: 100%; height: 110px; background: var(--bg-light);
+      border-radius: var(--radius); display: flex; align-items: center;
+      justify-content: center; font-size: 2.4rem; margin-bottom: 10px;
+    }
+    .pcard-tag {
+      display: inline-block; font-size: 0.62rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--accent); background: var(--accent-light);
+      padding: 2px 8px; border-radius: 4px; margin-bottom: 6px;
+    }
+    .pcard-name { font-size: 0.82rem; font-weight: 600; color: var(--text-dark); line-height: 1.3; margin-bottom: 4px; }
+    .pcard-brand { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 10px; }
+    .pcard-price { font-size: 1.1rem; font-weight: 800; color: var(--accent-2); }
+    .pcard-unit { font-size: 0.68rem; color: var(--text-light); margin-left: 4px; }
+    .pcard-box { font-size: 0.68rem; color: var(--text-light); margin-top: 2px; }
+    .pcard-btn {
+      width: 100%; margin-top: 10px; padding: 8px;
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius); font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+    }
+    .pcard-btn:hover { background: var(--accent-hover); }
+    .pcard-login-cta {
+      font-size: 0.75rem; color: var(--accent); font-weight: 600;
+      background: var(--accent-light); padding: 6px 10px;
+      border-radius: var(--radius); text-align: center; margin-top: 4px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .pcard-login-cta:hover { background: var(--accent); color: #fff; }
+    .pcard-login-cta a { color: inherit; }
+
+    /* ===== BRANDS CAROUSEL ===== */
+    .brands-section {
+      background: var(--bg-white); border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border); padding: 28px 0;
+    }
+    .brands-inner {
+      max-width: 1400px; margin: 0 auto; padding: 0 32px;
+    }
+    .brands-label {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--text-light); text-align: center;
+      margin-bottom: 16px;
+    }
+    .brands-track {
+      display: flex; gap: 32px; overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    }
+    .brands-slide { display: flex; gap: 32px; animation: brandScroll 25s linear infinite; }
+    @keyframes brandScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .brand-item {
+      flex-shrink: 0; padding: 10px 20px;
+      background: var(--bg-light); border: 1px solid var(--border);
+      border-radius: var(--radius); font-size: 0.82rem; font-weight: 700;
+      color: var(--text-muted); white-space: nowrap; transition: all 0.2s;
+    }
+    .brand-item:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ===== RECENT ORDERS ===== */
+    .orders-section {
+      max-width: 1400px; margin: 0 auto; padding: 32px;
+    }
+    .order-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; background: var(--bg-white);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      margin-bottom: 8px; transition: all 0.15s; cursor: pointer; gap: 16px;
+    }
+    .order-row:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+    .or-id { font-weight: 700; font-size: 0.88rem; color: var(--text-dark); }
+    .or-date { font-size: 0.75rem; color: var(--text-muted); }
+    .or-status {
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 0.68rem; font-weight: 600;
+    }
+    .or-total { font-weight: 700; font-size: 0.9rem; color: var(--accent-2); }
+    .or-reorder {
+      font-size: 0.75rem; color: var(--accent); font-weight: 600;
+      border: none; background: none; cursor: pointer;
+    }
+    .or-reorder:hover { text-decoration: underline; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .info-strip-inner { grid-template-columns: repeat(2, 1fr); }
+      .banner-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .info-bar { display: none; }
+      .info-strip-inner { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .cats-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+      .hc-slide-content { min-height: 200px; }
+      .hc-placeholder-title { font-size: 1.1rem; }
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+      .cats-section, .products-section, .orders-section, .banner-row, .banner-full { padding-left: 16px; padding-right: 16px; }
+    }
+    @media (max-width: 480px) {
+      .info-strip-inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP INFO BAR -->
+  <div class="info-bar">
+    <div class="info-bar-inner">
+      <div class="info-bar-left">
+        <a href="tel:08001234567">&#128222; 0800 123 4567</a>
+        <a href="https://wa.me/5571900000000" target="_blank">&#128172; WhatsApp</a>
+        <span>Seg a Sex: 8h as 18h</span>
+      </div>
+      <div class="info-bar-right">
+        <span id="welcomeBar"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMO BANNER -->
+  <div class="promo-banner">
+    Frete gratis em pedidos acima de R$ 500 · <a href="catalogo.html">Confira as condicoes</a>
+  </div>
+
+  <!-- STORE HEADER -->
+  <header class="store-header" id="storeHeader"></header>
+
+  <!-- HERO CAROUSEL -->
+  <div class="hero-carousel">
+    <div class="hc-slides" id="hcSlides">
+      <div class="hc-slide">
+        <div class="hc-slide-content">
+          <div class="hc-placeholder">
+            <div class="hc-placeholder-icon">&#128640;</div>
+            <div class="hc-placeholder-title">Lancamentos da Semana</div>
+            <div class="hc-placeholder-sub">Confira os novos produtos no catalogo</div>
+            <div class="hc-placeholder-hint">Sua foto aqui &middot; 1400 x 280 px</div>
+          </div>
+        </div>
+      </div>
+      <div class="hc-slide">
+        <div class="hc-slide-content">
+          <div class="hc-placeholder">
+            <div class="hc-placeholder-icon">&#127873;</div>
+            <div class="hc-placeholder-title">Cupom 1a Compra &mdash; 5% OFF</div>
+            <div class="hc-placeholder-sub">Use o codigo PRIMEIRA no carrinho</div>
+            <div class="hc-placeholder-hint">Sua foto aqui &middot; 1400 x 280 px</div>
+          </div>
+        </div>
+      </div>
+      <div class="hc-slide">
+        <div class="hc-slide-content">
+          <div class="hc-placeholder">
+            <div class="hc-placeholder-icon">&#128176;</div>
+            <div class="hc-placeholder-title">3% de Desconto a Vista no PIX</div>
+            <div class="hc-placeholder-sub">Pague e receba mais rapido</div>
+            <div class="hc-placeholder-hint">Sua foto aqui &middot; 1400 x 280 px</div>
+          </div>
+        </div>
+      </div>
+      <div class="hc-slide">
+        <div class="hc-slide-content">
+          <div class="hc-placeholder">
+            <div class="hc-placeholder-icon">&#128230;</div>
+            <div class="hc-placeholder-title">Promocao de Verao</div>
+            <div class="hc-placeholder-sub">Ate 20% off em produtos selecionados</div>
+            <div class="hc-placeholder-hint">Sua foto aqui &middot; 1400 x 280 px</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hc-dots" id="hcDots"></div>
+    <div class="hc-arrows">
+      <button class="hc-arrow" onclick="hcMove(-1)">&lsaquo;</button>
+      <button class="hc-arrow" onclick="hcMove(1)">&rsaquo;</button>
+    </div>
+  </div>
+
+  <!-- INFO STRIP -->
+  <div class="info-strip">
+    <div class="info-strip-inner">
+      <div class="is-item">
+        <div class="is-icon">&#128666;</div>
+        <div><div class="is-text">Frete Gratis</div><div class="is-sub">Pedidos acima de R$ 500</div></div>
+      </div>
+      <div class="is-item">
+        <div class="is-icon">&#128176;</div>
+        <div><div class="is-text">3% Desconto PIX</div><div class="is-sub">Pagamento a vista</div></div>
+      </div>
+      <div class="is-item">
+        <div class="is-icon">&#128230;</div>
+        <div><div class="is-text">Entrega em 3 Dias</div><div class="is-sub">Pedidos ate 14h</div></div>
+      </div>
+      <div class="is-item">
+        <div class="is-icon">&#128172;</div>
+        <div><div class="is-text">Suporte WhatsApp</div><div class="is-sub">Resposta em ate 30min</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="cats-section">
+    <div class="section-title">
+      <span>Compre por Categoria</span>
+      <a href="catalogo.html">Ver todas &rarr;</a>
+    </div>
+    <div class="cats-grid" id="catsGrid"></div>
+  </div>
+
+  <!-- TWO BANNERS SIDE BY SIDE -->
+  <div class="banner-row">
+    <div class="banner-slot" onclick="location='catalogo.html?cat=alimentos'">
+      <div class="banner-slot-placeholder">
+        <span class="bs-icon">&#127860;</span>
+        <div><div class="bs-text">Ofertas em Alimentos</div><div class="bs-hint">Sua foto &middot; 660 x 140 px</div></div>
+      </div>
+    </div>
+    <div class="banner-slot" onclick="location='catalogo.html?cat=bebidas'">
+      <div class="banner-slot-placeholder">
+        <span class="bs-icon">&#127867;</span>
+        <div><div class="bs-text">Ofertas em Bebidas</div><div class="bs-hint">Sua foto &middot; 660 x 140 px</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURED PRODUCTS -->
+  <div class="products-section">
+    <div class="section-title">
+      <span>Produtos em Destaque</span>
+      <a href="catalogo.html">Ver catalogo &rarr;</a>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+
+  <!-- FULL WIDTH BANNER -->
+  <div class="banner-full">
+    <div class="banner-full-inner" onclick="location='catalogo.html'">
+      <div class="banner-full-placeholder">
+        <span class="bf-icon">&#11088;</span>
+        <div><div class="bf-text">Banner Promocional — Campanha ou Destaque Sazonal</div><div class="bf-hint">Sua foto &middot; 1336 x 120 px</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MORE PRODUCTS -->
+  <div class="products-section">
+    <div class="section-title">
+      <span>Mais Vendidos</span>
+      <a href="catalogo.html">Ver todos &rarr;</a>
+    </div>
+    <div class="products-grid" id="bestSellers"></div>
+  </div>
+
+  <!-- TWO MORE BANNERS -->
+  <div class="banner-row">
+    <div class="banner-slot" onclick="location='catalogo.html?cat=higiene'">
+      <div class="banner-slot-placeholder">
+        <span class="bs-icon">&#129524;</span>
+        <div><div class="bs-text">Higiene e Perfumaria</div><div class="bs-hint">Sua foto &middot; 660 x 140 px</div></div>
+      </div>
+    </div>
+    <div class="banner-slot" onclick="location='catalogo.html?cat=limpeza'">
+      <div class="banner-slot-placeholder">
+        <span class="bs-icon">&#129529;</span>
+        <div><div class="bs-text">Produtos de Limpeza</div><div class="bs-hint">Sua foto &middot; 660 x 140 px</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRANDS -->
+  <div class="brands-section">
+    <div class="brands-inner">
+      <div class="brands-label">Marcas Parceiras</div>
+      <div class="brands-track">
+        <div class="brands-slide" id="brandsSlide"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECENT ORDERS -->
+  <div class="orders-section">
+    <div class="section-title">
+      <span>Seus Ultimos Pedidos</span>
+      <a href="pedidos.html">Ver todos &rarr;</a>
+    </div>
+    <div id="ordersGrid"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="store-footer" id="storeFooter"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/portal.js"></script>
+  <script>
+    const user = Portal.getUser();
+    init();
+
+    function init() {
+      Portal.renderStoreHeader('all');
+      Portal.renderStoreFooter();
+
+      // Welcome bar
+      const welcomeEl = document.getElementById('welcomeBar');
+      if (user) {
+        const firstName = user.name.split(' ')[0];
+        welcomeEl.innerHTML = `Ola, <strong style="color:#f1f5f9">${firstName}</strong> &middot; <a href="pedidos.html" style="color:var(--accent)">Meus Pedidos</a>`;
+      } else {
+        welcomeEl.innerHTML = `<a href="login.html" style="color:#3b82f6">Entrar</a> &middot; <a href="register.html" style="color:#059669">Cadastrar-se</a>`;
+      }
+
+      renderCategories();
+      renderProducts('productsGrid', 8);
+      renderProducts('bestSellers', 6, true);
+      renderOrders();
+      renderBrands();
+      initCarousel();
+    }
+
+    function renderCategories() {
+      const counts = {};
+      PRODUCTS.forEach(p => { counts[p.category] = (counts[p.category] || 0) + 1; });
+      document.getElementById('catsGrid').innerHTML = CATEGORIES.map(c => `
+        <a href="catalogo.html?cat=${c.id}" class="cat-card">
+          <div class="cat-card-icon">${c.icon}</div>
+          <div class="cat-card-name">${c.name}</div>
+          <div class="cat-card-count">${counts[c.id] || 0} produtos</div>
+        </a>
+      `).join('');
+    }
+
+    function renderProducts(containerId, count, bestSeller) {
+      let items = [...PRODUCTS].filter(p => p.stock > 0);
+      if (bestSeller) {
+        items.sort((a, b) => b.stock - a.stock);
+      } else {
+        items.sort(() => 0.5 - Math.random());
+      }
+      items = items.slice(0, count);
+
+      document.getElementById(containerId).innerHTML = items.map(p => {
+        const catName = Portal.getCategoryName(p.category);
+        const icon = Portal.getCategoryIcon(p.category);
+        const priceHtml = user ? `
+            <div>
+              <span class="pcard-price">${Portal.formatCurrency(p.price)}</span>
+              <span class="pcard-unit">/ ${p.unit}</span>
+            </div>
+            <div class="pcard-box">Cx c/ ${p.boxQty}un: ${Portal.formatCurrency(p.priceBox)}</div>
+            <button class="pcard-btn" onclick="event.stopPropagation(); Portal.addToCart(${p.id}, ${p.minOrder});">Adicionar ao Carrinho</button>
+          ` : `
+            <div class="pcard-login-cta" onclick="event.stopPropagation(); location='register.html';">
+              <a href="register.html">Cadastre-se para ver preços</a>
+            </div>
+          `;
+        return `
+          <div class="pcard" onclick="location='catalogo.html?cat=${p.category}'">
+            <div class="pcard-img">${icon}</div>
+            <span class="pcard-tag">${catName}</span>
+            <div class="pcard-name">${p.name}</div>
+            <div class="pcard-brand">${p.brand}</div>
+            ${priceHtml}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderOrders() {
+      const container = document.getElementById('ordersGrid');
+      const section = container.closest('.orders-section');
+      if (!user) { section.style.display = 'none'; return; }
+      const orders = Portal.getOrders().slice(0, 4);
+      if (orders.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-muted); padding:20px 0;">Nenhum pedido ainda. <a href="catalogo.html" style="color:var(--accent)">Faca seu primeiro!</a></p>`;
+        return;
+      }
+      container.innerHTML = orders.map(o => {
+        const status = Portal.getStatusInfo(o.status);
+        return `
+          <div class="order-row" onclick="location='pedidos.html'">
+            <div><div class="or-id">#${o.id}</div><div class="or-date">${Portal.formatDate(o.date)}</div></div>
+            <span class="or-status" style="background:${status.color}15; color:${status.color}">${status.label}</span>
+            <span class="or-total">${Portal.formatCurrency(o.total)}</span>
+            <button class="or-reorder" onclick="event.stopPropagation(); Portal.reorder(${o.id}); location='carrinho.html';">Repetir</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderBrands() {
+      const brands = [...BRANDS];
+      document.getElementById('brandsSlide').innerHTML =
+        [...brands, ...brands].map(b => `<span class="brand-item">${b}</span>`).join('');
+    }
+
+    // Carousel
+    let hcCurrent = 0;
+    const hcTotal = document.querySelectorAll('.hc-slide').length;
+
+    function initCarousel() {
+      document.getElementById('hcDots').innerHTML = Array.from({ length: hcTotal }, (_, i) =>
+        `<button class="hc-dot ${i === 0 ? 'active' : ''}" onclick="hcGo(${i})"></button>`
+      ).join('');
+      setInterval(() => hcMove(1), 5000);
+    }
+
+    function hcMove(dir) {
+      hcCurrent = (hcCurrent + dir + hcTotal) % hcTotal;
+      hcGo(hcCurrent);
+    }
+
+    function hcGo(idx) {
+      hcCurrent = idx;
+      document.getElementById('hcSlides').style.transform = `translateX(-${idx * 100}%)`;
+      document.querySelectorAll('.hc-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+  </script>
+</body>
+</html>

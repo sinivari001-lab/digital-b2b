@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Portal — DigitalB2B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/portal.css">
+  <style>
+    body { background: #0a0e1a; min-height: 100vh; }
+
+    .signup-page {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .signup-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px;
+      color: #f1f5f9;
+    }
+
+    .signup-left .logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 40px;
+    }
+
+    .signup-left .logo span { color: #3b82f6; }
+
+    .signup-left h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .signup-left h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #3b82f6, #06d6a0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .signup-left p {
+      color: #94a3b8;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      max-width: 480px;
+    }
+
+    .signup-steps {
+      margin-top: 40px;
+      list-style: none;
+      padding: 0;
+    }
+
+    .signup-steps li {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.95rem;
+    }
+
+    .signup-steps li .num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(59,130,246,0.15);
+      color: #3b82f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .signup-right {
+      width: 520px;
+      flex-shrink: 0;
+      background: #111827;
+      padding: 60px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-left: 1px solid rgba(255,255,255,0.06);
+      overflow-y: auto;
+    }
+
+    .signup-right h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+
+    .signup-right .subtitle {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    .signup-right .form-group {
+      margin-bottom: 18px;
+    }
+
+    .signup-right label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    .signup-right input,
+    .signup-right select {
+      width: 100%;
+      padding: 12px 16px;
+      background: #1a1f35;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      color: #f1f5f9;
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .signup-right input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+    }
+
+    .signup-right input::placeholder { color: #475569; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-hint {
+      font-size: 0.72rem;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    .signup-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 24px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .signup-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .signup-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .signup-login {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .signup-login a { color: #3b82f6; font-weight: 600; }
+
+    .form-error {
+      color: #ef4444;
+      font-size: 0.82rem;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .form-error.show { display: block; }
+
+    .form-success {
+      background: rgba(6,214,160,0.1);
+      border: 1px solid rgba(6,214,160,0.3);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      display: none;
+    }
+
+    .form-success.show { display: block; }
+
+    .form-success h3 {
+      color: #06d6a0;
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .form-success p { color: #94a3b8; font-size: 0.9rem; }
+
+    .form-success a {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 10px 24px;
+      background: #3b82f6;
+      color: #fff;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .plan-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .plan-card {
+      padding: 16px;
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .plan-card:hover { border-color: rgba(59,130,246,0.3); }
+    .plan-card.selected { border-color: #3b82f6; background: rgba(59,130,246,0.08); }
+
+    .plan-card .plan-name {
+      font-weight: 700;
+      color: #f1f5f9;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .plan-card .plan-price {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #3b82f6;
+    }
+
+    .plan-card .plan-price small {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: #64748b;
+    }
+
+    .plan-card .plan-desc {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 900px) {
+      .signup-page { flex-direction: column; }
+      .signup-left { padding: 40px 24px; }
+      .signup-right { width: 100%; padding: 40px 24px; border-left: none; border-top: 1px solid rgba(255,255,255,0.06); }
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-page">
+    <div class="signup-left">
+      <div class="logo">Digital<span>B2B</span></div>
+      <h1>Crie seu portal de vendas<br><em>em minutos</em></h1>
+      <p>Seus clientes fazem pedidos 24h pelo portal. Você recebe, separa e entrega. Sem ligação, sem WhatsApp, sem erro de anotação.</p>
+
+      <ul class="signup-steps">
+        <li><span class="num">1</span> Cadastre sua distribuidora</li>
+        <li><span class="num">2</span> Importe seus produtos (planilha ou manual)</li>
+        <li><span class="num">3</span> Envie o link para seus clientes</li>
+        <li><span class="num">4</span> Receba pedidos pelo portal 24h</li>
+      </ul>
+    </div>
+
+    <div class="signup-right">
+      <div id="signupForm">
+        <h2>Crie sua conta</h2>
+        <p class="subtitle">Comece grátis por 14 dias. Sem cartão de crédito.</p>
+
+        <!-- PLAN SELECTION -->
+        <div class="plan-cards">
+          <div class="plan-card selected" onclick="selectPlan('self-service', this)">
+            <div class="plan-name">Self-Service</div>
+            <div class="plan-price">R$ 197<small>/mês</small></div>
+            <div class="plan-desc">Você mesmo configura e gerencia</div>
+          </div>
+          <div class="plan-card" onclick="selectPlan('setup', this)">
+            <div class="plan-name">Premium</div>
+            <div class="plan-price">R$ 197<small>/mês</small></div>
+            <div class="plan-desc">Setup R$ 1.500 (único) · Configuramos tudo</div>
+          </div>
+        </div>
+
+        <!-- COMPANY -->
+        <div class="form-group">
+          <label>Nome da Distribuidora *</label>
+          <input type="text" id="company" placeholder="Ex: Distribuidora São Jorge">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>CNPJ</label>
+            <input type="text" id="cnpj" placeholder="00.000.000/0001-00">
+          </div>
+          <div class="form-group">
+            <label>Telefone / WhatsApp *</label>
+            <input type="tel" id="phone" placeholder="(71) 9 0000-0000">
+          </div>
+        </div>
+
+        <!-- PORTAL SLUG -->
+        <div class="form-group">
+          <label>Endereço do seu portal *</label>
+          <div style="display:flex; align-items:center; gap:0;">
+            <input type="text" id="slug" placeholder="suadistribuidora" style="border-radius:10px 0 0 10px; text-align:right; padding-right:4px;">
+            <span style="background:#1a1f35; border:1px solid rgba(255,255,255,0.08); border-left:none; padding:12px 14px; border-radius:0 10px 10px 0; color:#64748b; font-size:0.88rem; white-space:nowrap;">.digitalb2b.com.br</span>
+          </div>
+          <p class="form-hint">Seus clientes acessarão por este endereço</p>
+        </div>
+
+        <!-- USER -->
+        <div class="form-group">
+          <label>Seu nome completo *</label>
+          <input type="text" id="name" placeholder="João da Silva">
+        </div>
+
+        <div class="form-group">
+          <label>E-mail de acesso *</label>
+          <input type="email" id="email" placeholder="joao@distribuidora.com">
+        </div>
+
+        <div class="form-group">
+          <label>Senha *</label>
+          <input type="password" id="password" placeholder="Mínimo 6 caracteres">
+        </div>
+
+        <div class="form-error" id="signupError"></div>
+
+        <button class="signup-btn" onclick="doSignup()">Criar meu portal →</button>
+
+        <p class="signup-login">Já tem conta? <a href="login.html">Entrar</a></p>
+      </div>
+
+      <div class="form-success" id="signupSuccess">
+        <h3>✅ Portal criado com sucesso!</h3>
+        <p>Sua distribuidora já está online. Acesse o painel admin para cadastrar seus produtos e começar a receber pedidos.</p>
+        <a href="admin.html" id="goAdmin">Acessar Painel Admin →</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/supabase-client.js"></script>
+  <script>
+    let selectedPlan = 'self-service';
+
+    function selectPlan(plan, el) {
+      selectedPlan = plan;
+      document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    // Auto-generate slug from company name
+    document.getElementById('company').addEventListener('input', function() {
+      const slug = this.value
+        .toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+        .substring(0, 30);
+      document.getElementById('slug').value = slug;
+    });
+
+    async function doSignup() {
+      const btn = document.querySelector('.signup-btn');
+      const errorEl = document.getElementById('signupError');
+      errorEl.classList.remove('show');
+
+      const fields = {
+        company: document.getElementById('company').value.trim(),
+        cnpj: document.getElementById('cnpj').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        slug: document.getElementById('slug').value.trim().toLowerCase(),
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value,
+      };
+
+      // Validation
+      if (!fields.company || !fields.phone || !fields.slug || !fields.name || !fields.email || !fields.password) {
+        errorEl.textContent = 'Preencha todos os campos obrigatórios.';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      if (!/^[a-z0-9-]+$/.test(fields.slug)) {
+        errorEl.textContent = 'O endereço do portal deve conter apenas letras, números e hífens.';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      if (fields.password.length < 6) {
+        errorEl.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Criando portal...';
+
+      const result = await DataStore.signup(fields);
+
+      if (result.error) {
+        errorEl.textContent = result.error;
+        errorEl.classList.add('show');
+        btn.disabled = false;
+        btn.textContent = 'Criar meu portal →';
+        return;
+      }
+
+      // Success
+      document.getElementById('signupForm').style.display = 'none';
+      document.getElementById('signupSuccess').classList.add('show');
+    }
+  </script>
+</body>
+</html>
