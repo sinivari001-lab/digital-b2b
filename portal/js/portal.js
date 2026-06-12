@@ -384,7 +384,7 @@ const Portal = {
         </div>
         <div class="footer-bottom">
           &copy; 2026 ${(typeof CONFIG !== 'undefined' && CONFIG.company) ? CONFIG.company : 'DigitalB2B'} — Portal de Compras. Todos os direitos reservados.
-          <div class="powered-by">Desenvolvido por <a href="https://t7setedigital.com.br" target="_blank" rel="noopener">T7 Sete Digital</a></div>
+
         </div>
       </div>
     `;
