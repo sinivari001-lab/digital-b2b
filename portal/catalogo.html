@@ -43,6 +43,15 @@
     </div>
 
     <div class="product-grid" id="productGrid"></div>
+
+    <!-- Trust Strip -->
+    <div class="trust-strip">
+      <div class="trust-item"><span class="lc lc-lg"><i data-lucide="shield-check"></i></span> Compra Segura</div>
+      <div class="trust-item"><span class="lc lc-lg"><i data-lucide="truck"></i></span> Entrega Garantida</div>
+      <div class="trust-item"><span class="lc lc-lg"><i data-lucide="refresh-ccw"></i></span> Troca Facilitada</div>
+      <div class="trust-item"><span class="lc lc-lg"><i data-lucide="credit-card"></i></span> Boleto · PIX · Cartão</div>
+      <div class="trust-item"><span class="lc lc-lg"><i data-lucide="award"></i></span> 2.500+ Lojistas</div>
+    </div>
   </div>
 
   <!-- Banner rodape da empresa -->
@@ -214,14 +223,12 @@
       const input = document.getElementById(`qty-${productId}`);
       const qty = parseInt(input.value);
       Portal.addToCart(productId, qty);
-
-      const btn = input.closest('.product-card').querySelector('.add-cart-btn');
-      btn.textContent = '✓ No carrinho';
-      btn.classList.add('added');
+      // Button animation now handled inside Portal.addToCart()
     }
 
     renderBrandFilters();
     renderProducts();
+    refreshIcons();
 
     // Banner da empresa entre os produtos (apos o 8o produto)
     setTimeout(() => {

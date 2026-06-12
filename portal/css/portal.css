@@ -704,7 +704,7 @@ input, select, textarea { font-family: inherit; }
 .add-cart-btn {
   flex: 1;
   padding: 8px 14px;
-  background: linear-gradient(135deg, var(--accent) 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
   color: var(--text-white);
   border: none;
   border-radius: var(--radius);
@@ -713,8 +713,8 @@ input, select, textarea { font-family: inherit; }
   transition: all 0.25s ease;
 }
 
-.add-cart-btn:hover { background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent) 100%); box-shadow: 0 3px 12px rgba(37,99,235,0.3); transform: translateY(-1px); }
-.add-cart-btn.added { background: linear-gradient(135deg, var(--accent-2) 0%, #10b981 100%); }
+.add-cart-btn:hover { background: linear-gradient(135deg, #15803d 0%, #16a34a 100%); box-shadow: 0 3px 12px rgba(22, 163, 74, 0.3); transform: translateY(-1px); }
+.add-cart-btn.added { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
 .add-cart-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 
 .product-min-order {
@@ -1228,3 +1228,56 @@ input, select, textarea { font-family: inherit; }
   .header-search { display: none; }
   .product-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== P0: ADD-TO-CART SUCCESS ANIMATION ===== */
+@keyframes checkmark-pop { from { transform: scale(0); } to { transform: scale(1); } }
+.add-cart-btn.success { background: #16a34a !important; pointer-events: none; }
+@keyframes badge-bump { 0% { transform: scale(1); } 40% { transform: scale(1.4); } 100% { transform: scale(1); } }
+.cart-count.bump { animation: badge-bump 0.3s ease; }
+
+/* ===== P0: TRUST STRIP ===== */
+.trust-strip {
+  display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap;
+  padding: 18px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0; margin: 32px 0;
+}
+.trust-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 500; color: #475569; }
+.trust-item .lc { color: #16a34a; }
+
+/* ===== P0: SOCIAL PROOF BAR ===== */
+.social-proof-bar {
+  background: #0f172a; color: #94a3b8; font-size: 0.72rem;
+  padding: 6px 0; text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.social-proof-bar strong { color: #f1f5f9; }
+
+/* ===== P1: WHATSAPP FLOATING BUTTON ===== */
+.whatsapp-float {
+  position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px;
+  background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4); cursor: pointer; z-index: 1000;
+  transition: all 0.3s ease; text-decoration: none;
+}
+.whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5); }
+.whatsapp-float svg { width: 28px; height: 28px; fill: #ffffff; }
+.whatsapp-float::before {
+  content: 'Fale conosco'; position: absolute; right: 68px;
+  background: #1a1f35; color: #fff; font-size: 0.78rem; font-weight: 500;
+  padding: 6px 12px; border-radius: 6px; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+}
+.whatsapp-float:hover::before { opacity: 1; }
+@keyframes wa-pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); } 70% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+.whatsapp-float.pulse { animation: wa-pulse 2s infinite; }
+
+/* ===== P1: STOCK INDICATOR PULSING DOT ===== */
+.product-stock.low-stock::before { animation: stock-pulse 1.5s ease-in-out infinite; }
+@keyframes stock-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ===== P1: CUSTOMER TIER BADGE ===== */
+.badge-tier { display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
+.badge-tier.standard { background: #f1f5f9; color: #475569; }
+.badge-tier.atacado { background: #dbeafe; color: #1d4ed8; }
+.badge-tier.vip { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; border: 1px solid #f59e0b; }
