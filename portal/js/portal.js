@@ -384,7 +384,7 @@ const Portal = {
         </div>
         <div class="footer-bottom">
           &copy; 2026 ${(typeof CONFIG !== 'undefined' && CONFIG.company) ? CONFIG.company : 'DigitalB2B'} — Portal de Compras. Todos os direitos reservados.
-          <div style="margin-top:6px; font-size:0.68rem; color:#475569;">Powered by <a href="#" style="color:#3b82f6; font-weight:600;">DigitalB2B</a></div>
+          <div style="margin-top:6px; font-size:0.68rem; color:#475569;">Powered by <a href="https://digitalb2b.com.br" target="_blank" rel="noopener" style="color:#3b82f6; font-weight:600;">DigitalB2B</a></div>
         </div>
       </div>
     `;
