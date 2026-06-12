@@ -320,6 +320,18 @@ const Portal = {
       </nav>
     `;
 
+    // Demo banner — show CTA for demo users
+    const isDemo = user && (user.email === 'demo@empresa.com' || user.email === 'admin@distribuidora.com');
+    if (isDemo && !document.querySelector('.demo-banner')) {
+      const demoBanner = document.createElement('div');
+      demoBanner.className = 'demo-banner';
+      demoBanner.innerHTML = `
+        <span>&#128640; Você está no <strong>modo demonstração</strong> do DigitalB2B</span>
+        <a href="../index.html#contato">Quero meu portal &rarr;</a>
+      `;
+      document.body.insertBefore(demoBanner, document.body.firstChild);
+    }
+
     // P1: Social proof bar — add before header
     const existingProof = document.querySelector('.social-proof-bar');
     if (!existingProof) {

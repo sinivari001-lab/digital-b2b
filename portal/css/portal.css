@@ -1231,6 +1231,20 @@ input, select, textarea { font-family: inherit; }
   .product-grid { grid-template-columns: 1fr; }
 }
 
+/* ===== DEMO BANNER ===== */
+.demo-banner {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #94a3b8;
+  padding: 10px 32px; text-align: center; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.demo-banner strong { color: #f1f5f9; }
+.demo-banner a {
+  background: #2563eb; color: #fff; padding: 5px 16px; border-radius: 6px;
+  font-weight: 600; font-size: 0.78rem; transition: all 0.2s;
+}
+.demo-banner a:hover { background: #1d4ed8; }
+
 /* ===== P0: ADD-TO-CART SUCCESS ANIMATION ===== */
 @keyframes checkmark-pop { from { transform: scale(0); } to { transform: scale(1); } }
 .add-cart-btn.success { background: #16a34a !important; pointer-events: none; }

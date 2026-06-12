@@ -580,7 +580,7 @@
             <li><span class="pf-check">&#10003;</span> Dashboard de vendas</li>
             <li><span class="pf-check">&#10003;</span> Suporte por e-mail</li>
           </ul>
-          <a href="#contato" class="sk-btn sk-btn-secondary sk-btn-block">Começar agora</a>
+          <a href="#contato" class="sk-btn sk-btn-secondary sk-btn-block" onclick="setTimeout(()=>document.getElementById('leadCompany').focus(),300)">Começar agora</a>
         </div>
         <div class="price-card featured">
           <div class="price-name">Premium</div>
@@ -595,7 +595,7 @@
             <li><span class="pf-check">&#10003;</span> Treinamento da equipe</li>
             <li><span class="pf-check">&#10003;</span> Suporte prioritário</li>
           </ul>
-          <a href="#contato" class="sk-btn sk-btn-primary sk-btn-block">Falar com especialista</a>
+          <a href="https://wa.me/5571999999999?text=Olá! Tenho interesse no plano Premium do DigitalB2B." class="sk-btn sk-btn-primary sk-btn-block" target="_blank">&#128172; Falar com especialista</a>
         </div>
       </div>
     </div>
@@ -629,7 +629,7 @@
           <input type="tel" placeholder="WhatsApp *" id="leadPhone" required>
           <input type="email" placeholder="E-mail" id="leadEmail">
           <button type="submit" class="sk-btn sk-btn-primary sk-btn-block" id="leadBtn">Quero meu diagnóstico &rarr;</button>
-          <div id="leadSuccess" style="display:none; text-align:center; padding:16px 0; color:#10b981; font-weight:600;">&#10003; Recebemos! Entraremos em contato em breve.</div>
+          <div id="leadSuccess" style="display:none; text-align:center; padding:16px 0; color:#10b981; font-weight:600;">&#10003; Recebemos! Abrindo o demo para você conhecer...</div>
         </form>
         <div class="cta-or">
           <span>ou</span>
@@ -738,6 +738,7 @@
       localStorage.setItem('db2b_leads', JSON.stringify(leads));
       document.getElementById('leadBtn').style.display = 'none';
       document.getElementById('leadSuccess').style.display = 'block';
+      setTimeout(() => { window.open('portal/login.html', '_blank'); }, 2000);
     }
 
     // FAQ accordion
