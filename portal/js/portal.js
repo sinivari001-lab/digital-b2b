@@ -388,8 +388,8 @@ const Portal = {
       </div>
     `;
 
-    // P1: WhatsApp floating button
-    if (!document.querySelector('.whatsapp-float')) {
+    // P1: WhatsApp floating button (disabled for now)
+    if (false && !document.querySelector('.whatsapp-float')) {
       const waPhone = (typeof CONFIG !== 'undefined' && CONFIG.contact?.whatsapp) || '5571900000000';
       const wa = document.createElement('a');
       wa.className = 'whatsapp-float pulse';
