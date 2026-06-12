@@ -1185,6 +1185,9 @@ input, select, textarea { font-family: inherit; }
   font-size: 0.75rem;
   text-align: center;
 }
+.powered-by { margin-top: 8px; font-size: 0.7rem; color: #475569; }
+.powered-by a { color: #3b82f6; font-weight: 600; transition: color 0.2s; }
+.powered-by a:hover { color: #60a5fa; }
 
 /* ===== MOBILE MENU ===== */
 .mobile-toggle {
