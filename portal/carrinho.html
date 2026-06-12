@@ -75,7 +75,8 @@
       const items = cart.map(item => {
         const p = PRODUCTS.find(prod => prod.id === item.productId);
         if (!p) return '';
-        const total = p.price * item.qty;
+        const unitPrice = Portal.getPriceForUser(p.price, user);
+        const total = unitPrice * item.qty;
         const icon = Portal.getCategoryIcon(p.category);
 
         return `
@@ -84,7 +85,7 @@
             <div class="cart-item-info">
               <div class="cart-item-name">${p.name}</div>
               <div class="cart-item-brand">${p.brand} · ${p.sku}</div>
-              <div class="cart-item-unit-price">${Portal.formatCurrency(p.price)} / ${p.unit}</div>
+              <div class="cart-item-unit-price">${Portal.formatCurrency(unitPrice)} / ${p.unit}</div>
             </div>
             <div class="qty-control">
               <button onclick="updateQty(${p.id}, ${-p.minOrder})">−</button>

@@ -35,6 +35,8 @@
   <script src="js/config.js"></script>
   <script src="js/portal.js"></script>
   <script>
+    const user = Portal.requireAuth();
+    if (!user) throw new Error('redirect');
     Portal.renderStoreHeader();
     Portal.renderStoreFooter();
     renderOrders();

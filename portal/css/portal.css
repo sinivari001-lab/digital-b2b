@@ -1214,6 +1214,9 @@ input, select, textarea { font-family: inherit; }
   .header-search { margin: 0 16px; }
   .header-user-info { display: none; }
 
+  .category-nav { display: none; }
+  .category-nav.mobile-open { display: block; }
+  .category-nav.mobile-open .category-nav-inner { flex-wrap: wrap; padding: 8px 16px; }
   .category-nav-inner { padding: 0 16px; }
 
   .page-container { padding: 16px; }
