@@ -37,8 +37,8 @@
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
             <div class="form-group">
-              <label for="regCnpj">CNPJ</label>
-              <input type="text" id="regCnpj" placeholder="00.000.000/0001-00">
+              <label for="regCnpj">CNPJ *</label>
+              <input type="text" id="regCnpj" placeholder="00.000.000/0001-00" required maxlength="18">
             </div>
             <div class="form-group">
               <label for="regPhone">Telefone / WhatsApp *</label>
@@ -73,10 +73,9 @@
 
       <div id="registerSuccess" style="display:none; text-align:center; padding:40px 0;">
         <div style="font-size:3rem; margin-bottom:16px;">✅</div>
-        <h2 style="margin-bottom:8px;">Cadastro enviado!</h2>
-        <p class="subtitle" style="margin-bottom:24px;">Seu cadastro está em análise pela equipe comercial. Assim que aprovado, você poderá acessar o portal com seu e-mail e senha.</p>
-        <a href="login.html" class="btn btn-primary" style="display:inline-block; padding:12px 32px;">Ir para o Login</a>
-        <p style="font-size:0.78rem; color:#94a3b8; margin-top:16px;">A aprovação é rápida — geralmente em até 24h úteis.</p>
+        <h2 style="margin-bottom:8px;">Cadastro concluído!</h2>
+        <p class="subtitle" style="margin-bottom:24px;">Sua conta foi criada com sucesso. Você já pode acessar o portal com seu e-mail e senha.</p>
+        <a href="login.html" class="btn btn-primary" style="display:inline-block; padding:12px 32px;">Entrar no Portal →</a>
       </div>
     </div>
   </div>
@@ -86,6 +85,36 @@
   <script src="js/portal.js"></script>
   <script>
     if (Portal.getUser()) window.location.href = 'index.html';
+
+    // CNPJ mask: format as user types
+    document.getElementById('regCnpj').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').slice(0, 14);
+      if (v.length > 12) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2})/, '$1.$2.$3/$4-$5');
+      else if (v.length > 8) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{1,4})/, '$1.$2.$3/$4');
+      else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d{1,3})/, '$1.$2.$3');
+      else if (v.length > 2) v = v.replace(/^(\d{2})(\d{1,3})/, '$1.$2');
+      this.value = v;
+    });
+
+    function validateCNPJ(cnpj) {
+      cnpj = cnpj.replace(/\D/g, '');
+      if (cnpj.length !== 14) return false;
+      if (/^(\d)\1{13}$/.test(cnpj)) return false;
+
+      const calc = (digits, weights) => {
+        let sum = 0;
+        for (let i = 0; i < weights.length; i++) sum += parseInt(digits[i]) * weights[i];
+        const rest = sum % 11;
+        return rest < 2 ? 0 : 11 - rest;
+      };
+
+      const w1 = [5,4,3,2,9,8,7,6,5,4,3,2];
+      const w2 = [6,5,4,3,2,9,8,7,6,5,4,3,2];
+
+      if (calc(cnpj, w1) !== parseInt(cnpj[12])) return false;
+      if (calc(cnpj, w2) !== parseInt(cnpj[13])) return false;
+      return true;
+    }
 
     function doRegister(e) {
       e.preventDefault();
@@ -102,30 +131,51 @@
         password: document.getElementById('regPassword').value,
       };
 
-      if (!fields.company || !fields.phone || !fields.name || !fields.email || !fields.password) {
-        errorEl.textContent = 'Preencha todos os campos obrigatorios.';
+      if (!fields.company || !fields.cnpj || !fields.phone || !fields.name || !fields.email || !fields.password) {
+        errorEl.textContent = 'Preencha todos os campos obrigatórios.';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      if (!validateCNPJ(fields.cnpj)) {
+        errorEl.textContent = 'CNPJ inválido. Verifique os números digitados.';
         errorEl.classList.add('show');
         return;
       }
 
       if (fields.password.length < 6) {
-        errorEl.textContent = 'A senha deve ter no minimo 6 caracteres.';
+        errorEl.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      // Check duplicate email
+      const approved = JSON.parse(localStorage.getItem('db2b_approved_users') || '[]');
+      const existing = [...MOCK_USERS, ...approved].find(u => u.email === fields.email);
+      if (existing) {
+        errorEl.textContent = 'Já existe uma conta com esse e-mail.';
         errorEl.classList.add('show');
         return;
       }
 
       btn.disabled = true;
-      btn.textContent = 'Enviando...';
+      btn.textContent = 'Criando conta...';
 
-      // Demo mode: save to localStorage pending list and show success
-      const pending = JSON.parse(localStorage.getItem('db2b_pending_registrations') || '[]');
-      pending.push({
-        ...fields,
-        status: 'pending',
+      // Auto-approve: save directly to approved users
+      const maxId = [...MOCK_USERS, ...approved].reduce((max, u) => Math.max(max, u.id || 0), 0);
+      approved.push({
+        id: maxId + 1,
+        email: fields.email,
+        password: fields.password,
+        name: fields.name,
+        company: fields.company,
+        cnpj: fields.cnpj,
+        phone: fields.phone,
         type: 'client',
+        priceTable: 'standard',
         registeredAt: new Date().toISOString(),
       });
-      localStorage.setItem('db2b_pending_registrations', JSON.stringify(pending));
+      localStorage.setItem('db2b_approved_users', JSON.stringify(approved));
 
       document.getElementById('registerForm').style.display = 'none';
       document.getElementById('registerSuccess').style.display = 'block';
