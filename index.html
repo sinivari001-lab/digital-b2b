@@ -12,7 +12,67 @@
   <link rel="stylesheet" href="sitekit/css/reset.css">
   <link rel="stylesheet" href="sitekit/css/components.css">
   <link rel="stylesheet" href="sitekit/css/layouts.css">
+  <!-- StringTune v1.0.2 — attribute-driven scroll/animation library -->
+  <script src="https://unpkg.com/@fiddle-digital/string-tune@1.0.2/dist/index.js" defer></script>
   <style>
+    /* ===== STRINGTUNE: PROGRESS-DRIVEN ANIMATIONS ===== */
+    /* Hero headline text reveal (split chars) */
+    .hero-split h1 {
+      overflow: hidden;
+    }
+    .hero-split h1 .-s-char {
+      display: inline-block;
+      transform: translateY(105%);
+      opacity: 0;
+      animation: stCharReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: calc(var(--char-index, 0) * 0.025s + 0.3s);
+    }
+    @keyframes stCharReveal {
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .hero-split h1 .-s-line {
+      overflow: hidden;
+      display: block;
+    }
+
+    /* Scroll progress bar (page-level) */
+    .st-progress-bar {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      width: 100%; height: 3px; pointer-events: none;
+      background: transparent;
+    }
+    .st-progress-bar::after {
+      content: '';
+      display: block; height: 100%;
+      background: var(--sk-gradient);
+      transform: scaleX(var(--progress, 0));
+      transform-origin: left;
+      will-change: transform;
+    }
+
+    /* Section parallax-like progress transforms */
+    [data-st-section] {
+      --st-y: calc((var(--progress, 0) - 0.5) * 12px);
+      --st-scale: calc(0.97 + var(--progress, 0) * 0.03);
+    }
+
+    /* Magnetic buttons */
+    .st-magnetic {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translate3d(
+        calc(var(--magnetic-x, 0) * 1px),
+        calc(var(--magnetic-y, 0) * 1px),
+        0
+      );
+    }
+
+    /* Numbers counter section: progress-driven scale */
+    .numbers-strip .num-item .big {
+      transition: transform 0.3s ease;
+    }
+    .numbers-strip[style*="--progress"] .num-item .big {
+      transform: scale(calc(0.9 + var(--progress, 0) * 0.1));
+    }
     /* ===== PROMO TOP BAR ===== */
     .top-bar {
       background: var(--sk-accent); color: #fff; text-align: center;
@@ -305,20 +365,24 @@
       background: linear-gradient(135deg, #0c0f1d 0%, #1a1040 100%) !important;
       color: #fff !important; position: relative; overflow: hidden;
     }
+    .cta-final,
+    .cta-final *:not(.sk-btn):not(.cta-wpp):not(input):not(button) {
+      background-color: transparent;
+    }
     .cta-final::before {
       content: ''; position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%); width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(108,60,224,0.25) 0%, transparent 60%);
+      background: radial-gradient(circle, rgba(108,60,224,0.25) 0%, transparent 60%) !important;
       pointer-events: none;
     }
-    .cta-final .sk-container { position: relative; z-index: 1; }
+    .cta-final .sk-container { position: relative; z-index: 1; background: transparent !important; }
     .cta-final h2 { font-size: var(--sk-fs-2xl); font-weight: var(--sk-fw-black); margin-bottom: var(--sk-space-md); color: #fff !important; }
-    .cta-final h2 em { font-style: normal; background: linear-gradient(135deg, #a855f7, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .cta-final h2 em { font-style: normal; background: linear-gradient(135deg, #a855f7, #10b981) !important; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .cta-final p { color: rgba(255,255,255,0.5) !important; margin-bottom: var(--sk-space-xl); }
     .cta-split { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; align-items: center; max-width: 800px; margin: 0 auto; background: transparent !important; }
-    .cta-form { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--sk-radius-lg); padding: var(--sk-space-xl); text-align: left; }
+    .cta-form { background: rgba(255,255,255,0.06) !important; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--sk-radius-lg); padding: var(--sk-space-xl); text-align: left; }
     .cta-form h3 { font-size: var(--sk-fs-md); font-weight: var(--sk-fw-bold); margin-bottom: var(--sk-space-md); color: #fff; }
-    .cta-form input { width: 100%; padding: 12px 14px; margin-bottom: 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--sk-radius); color: #fff; font-size: var(--sk-fs-sm); font-family: inherit; outline: none; }
+    .cta-form input { width: 100%; padding: 12px 14px; margin-bottom: 10px; background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15); border-radius: var(--sk-radius); color: #fff; font-size: var(--sk-fs-sm); font-family: inherit; outline: none; }
     .cta-form input::placeholder { color: rgba(255,255,255,0.4); }
     .cta-form input:focus { border-color: var(--sk-accent); }
     .cta-or { display: flex; align-items: center; justify-content: center; background: transparent !important; }
@@ -399,6 +463,9 @@
 </head>
 <body>
 
+  <!-- StringTune: Page scroll progress bar (tracks body scroll) -->
+  <div class="st-progress-bar" string="progress" string-key="--progress" string-outside-container="true"></div>
+
   <!-- TOP PROMO BAR -->
   <div class="top-bar">
     Vagas limitadas para diagnóstico gratuito em Junho &mdash;<a href="#pricing">Ver planos</a>
@@ -424,11 +491,11 @@
   <section class="sk-container">
     <div class="hero-split">
       <div class="rv">
-        <h1>Seus clientes fazem pedidos <em>online, 24h,</em> direto no catálogo</h1>
+        <h1 string="split" string-split="line|char-line">Seus clientes fazem pedidos <em>online, 24h,</em> direto no catálogo</h1>
         <p class="hero-sub">Portal B2B com sua marca, catálogo digital e integração ERP. Venda enquanto dorme.</p>
         <div class="hero-actions">
-          <a href="#contato" class="sk-btn sk-btn-primary sk-btn-lg">Quero vender online &rarr;</a>
-          <a href="portal/login.html?demo=true" class="sk-btn sk-btn-secondary sk-btn-lg">&#9654; Ver demo</a>
+          <a href="#contato" class="sk-btn sk-btn-primary sk-btn-lg st-magnetic" string="magnetic" string-strength="0.15" string-radius="120">Quero vender online &rarr;</a>
+          <a href="portal/login.html?demo=true" class="sk-btn sk-btn-secondary sk-btn-lg st-magnetic" string="magnetic" string-strength="0.12" string-radius="100">&#9654; Ver demo</a>
         </div>
         <div class="hero-proof">
           <div><strong>+350</strong> distribuidores</div>
@@ -580,7 +647,7 @@
   </section>
 
   <!-- NUMBERS INLINE -->
-  <div class="numbers-strip sk-container rv">
+  <div class="numbers-strip sk-container rv" string="progress" string-key="--progress" string-enter-vp="bottom" string-exit-vp="top">
     <div class="num-item"><div class="big"><span class="ctr" data-target="350">0</span>+</div><div class="label">Distribuidores</div></div>
     <div class="num-item"><div class="big"><span class="ctr" data-target="50">0</span>mil</div><div class="label">Compradores</div></div>
     <div class="num-item"><div class="big"><span class="ctr" data-target="80">0</span>%</div><div class="label">Menos retrabalho</div></div>
@@ -651,7 +718,7 @@
             <li><span class="pf-check">&#10003;</span> Treinamento da equipe</li>
             <li><span class="pf-check">&#10003;</span> Suporte prioritário</li>
           </ul>
-          <a href="https://wa.me/5571999999999?text=Olá! Tenho interesse no plano Premium do DigitalB2B." class="sk-btn sk-btn-primary sk-btn-block" target="_blank">&#128172; Falar com especialista</a>
+          <a href="https://wa.me/5571999999999?text=Olá! Tenho interesse no plano Premium do DigitalB2B." class="sk-btn sk-btn-primary sk-btn-block st-magnetic" string="magnetic" string-strength="0.12" string-radius="100" target="_blank">&#128172; Falar com especialista</a>
         </div>
       </div>
     </div>
@@ -690,7 +757,7 @@
         <div class="cta-or"><span>ou</span></div>
         <div class="cta-direct">
           <p>Prefere falar agora?</p>
-          <a href="https://wa.me/5571999999999?text=Olá! Sou distribuidor e quero saber mais sobre o DigitalB2B." class="cta-wpp" target="_blank">&#128172; Chamar no WhatsApp</a>
+          <a href="https://wa.me/5571999999999?text=Olá! Sou distribuidor e quero saber mais sobre o DigitalB2B." class="cta-wpp st-magnetic" string="magnetic" string-strength="0.15" string-radius="100" target="_blank">&#128172; Chamar no WhatsApp</a>
           <a href="portal/login.html?demo=true" style="display:inline-flex;align-items:center;gap:6px;padding:10px 22px;color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:8px;margin-top:12px;font-weight:600;font-size:0.9rem;">&#9654; Ver demo do portal</a>
         </div>
       </div>
@@ -803,6 +870,23 @@
         document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
         if (!wasOpen) item.classList.add('open');
       });
+    });
+  </script>
+
+  <!-- StringTune initialization -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof StringTune === 'undefined') return;
+      try {
+        const st = StringTune.StringTune.getInstance();
+        if (StringTune.StringProgress) st.use(StringTune.StringProgress);
+        if (StringTune.StringSplit) st.use(StringTune.StringSplit);
+        if (StringTune.StringMagnetic) st.use(StringTune.StringMagnetic);
+        if (StringTune.StringLoading) st.use(StringTune.StringLoading, { timeout: 600 });
+        st.start(0);
+      } catch (e) {
+        console.warn('[StringTune] Init failed, falling back gracefully:', e.message);
+      }
     });
   </script>
 
