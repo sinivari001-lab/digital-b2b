@@ -305,10 +305,10 @@
       background: linear-gradient(135deg, #0c0f1d 0%, #1a1040 100%) !important;
       color: #fff !important; position: relative; overflow: hidden;
     }
-    .cta-final,
-    .cta-final *:not(.sk-btn):not(.cta-wpp):not(input):not(button) {
-      background-color: transparent;
-    }
+    .cta-final * { background-color: transparent !important; }
+    .cta-final .sk-btn, .cta-final .cta-wpp { background-color: revert !important; }
+    .cta-final .cta-form { background-color: rgba(255,255,255,0.06) !important; }
+    .cta-final .cta-form input { background-color: rgba(255,255,255,0.08) !important; }
     .cta-final::before {
       content: ''; position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%); width: 600px; height: 600px;
@@ -679,7 +679,7 @@
   </section>
 
   <!-- CTA FINAL -->
-  <section class="cta-final" id="contato">
+  <section class="cta-final" id="contato" style="background: linear-gradient(135deg, #0c0f1d 0%, #1a1040 100%) !important;">
     <div class="sk-container" style="position:relative; z-index:1;">
       <h2>Pronto para vender <em>online 24h?</em></h2>
       <p>Diagnóstico gratuito &mdash; descubra quanto você perde sem um portal digital.</p>
