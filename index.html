@@ -24,8 +24,11 @@
     /* Nav: push below promo bar (38px) */
     .sk-nav { top: 38px !important; }
     .sk-nav.scrolled {
-      background: rgba(250,251,253,0.92);
-      border-bottom-color: var(--sk-border);
+      background: rgba(255, 255, 255, 0.72) !important;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(108, 60, 224, 0.08) !important;
+      box-shadow: 0 1px 20px rgba(0, 0, 0, 0.04);
     }
     .sk-nav-logo { color: var(--sk-accent); }
     .sk-nav-logo span { color: var(--sk-text-1); }
@@ -64,6 +67,14 @@
     }
     .roi-result-label { font-size: var(--sk-fs-xs); color: var(--sk-success); font-weight: var(--sk-fw-semibold); }
     .roi-result-value { font-size: var(--sk-fs-2xl); font-weight: var(--sk-fw-black); color: var(--sk-success); }
+
+    .roi-calc {
+      animation: roiGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes roiGlow {
+      0% { box-shadow: var(--sk-shadow-lg), 0 0 40px var(--sk-accent-glow); }
+      100% { box-shadow: var(--sk-shadow-lg), 0 0 80px var(--sk-accent-glow); }
+    }
 
     /* ===== LOGOS STRIP ===== */
     .logos-strip {
@@ -106,9 +117,19 @@
       display: flex; align-items: flex-start; gap: 12px;
       padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
       font-size: var(--sk-fs-sm); color: var(--sk-text-2);
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
     .ba-item:last-child { border-bottom: none; }
     .ba-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .ba-col.v .ba-item { opacity: 1; transform: translateX(0); }
+    .ba-col.v .ba-item:nth-child(2) { transition-delay: 0.05s; }
+    .ba-col.v .ba-item:nth-child(3) { transition-delay: 0.10s; }
+    .ba-col.v .ba-item:nth-child(4) { transition-delay: 0.15s; }
+    .ba-col.v .ba-item:nth-child(5) { transition-delay: 0.20s; }
+    .ba-col.v .ba-item:nth-child(6) { transition-delay: 0.25s; }
+    .ba-col.v .ba-item:nth-child(7) { transition-delay: 0.30s; }
 
     /* ===== FEATURES: TABS + MOCKUP ===== */
     .feat-section {
@@ -121,6 +142,20 @@
       padding: 16px 20px; background: transparent;
       border: 1px solid transparent; border-radius: var(--sk-radius);
       cursor: pointer; text-align: left; transition: all 0.2s; font-family: inherit;
+      position: relative; overflow: hidden;
+    }
+    .feat-tab::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--sk-accent);
+      transform: scaleY(0);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: top;
+    }
+    .feat-tab.active::before {
+      transform: scaleY(1);
     }
     .feat-tab:hover { background: rgba(0,0,0,0.02); }
     .feat-tab.active {
@@ -204,6 +239,13 @@
     .test-avatar { width: 36px; height: 36px; border-radius: var(--sk-radius); background: var(--sk-gradient); display: flex; align-items: center; justify-content: center; font-weight: var(--sk-fw-bold); font-size: var(--sk-fs-xs); color: #fff; }
     .test-name { font-weight: var(--sk-fw-semibold); font-size: var(--sk-fs-sm); }
     .test-role { font-size: var(--sk-fs-xs); color: var(--sk-text-3); }
+    .test-slide {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .test-slide:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    }
 
     /* ===== PRICING ===== */
     .pricing { padding: var(--sk-space-3xl) 0; }
@@ -213,9 +255,12 @@
     .price-card {
       background: var(--sk-bg-2); border: 1px solid var(--sk-border);
       border-radius: var(--sk-radius-xl); padding: var(--sk-space-xl);
-      position: relative; transition: all 0.25s;
+      position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .price-card:hover { transform: translateY(-4px); box-shadow: var(--sk-shadow-lg); }
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--sk-shadow-lg), 0 0 30px var(--sk-accent-glow);
+    }
     .price-card.featured { border-color: var(--sk-accent); box-shadow: 0 0 40px var(--sk-accent-glow); }
     .price-card.featured::before {
       content: 'Mais Popular'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
@@ -313,8 +358,19 @@
     .wpp-fab:hover { transform: scale(1.08); }
 
     /* Reveal */
-    .rv { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
-    .rv.v { opacity: 1; transform: translateY(0); }
+    .rv {
+      opacity: 0;
+      transform: translateY(30px) scale(0.97);
+      filter: blur(3px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .rv.v {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
 
     /* Responsive */
     @media (max-width: 1024px) {
@@ -418,7 +474,7 @@
       <h2>Antes vs Depois do portal digital</h2>
     </div>
     <div class="ba-grid rv">
-      <div class="ba-col ba-before">
+      <div class="ba-col ba-before rv">
         <div class="ba-label">&#10007; Sem portal</div>
         <div class="ba-item"><span class="ba-icon">&#9203;</span><span>Vendas só no horário comercial (8h/dia)</span></div>
         <div class="ba-item"><span class="ba-icon">&#128172;</span><span>Pedidos por WhatsApp, áudio e planilha</span></div>
@@ -428,7 +484,7 @@
         <div class="ba-item"><span class="ba-icon">&#128176;</span><span>Escalar = contratar mais vendedores</span></div>
       </div>
       <div class="ba-divider">&rarr;</div>
-      <div class="ba-col ba-after">
+      <div class="ba-col ba-after rv">
         <div class="ba-label">&#10003; Com DigitalB2B</div>
         <div class="ba-item"><span class="ba-icon">&#127760;</span><span>Vendas 24h, incluindo fins de semana</span></div>
         <div class="ba-item"><span class="ba-icon">&#128187;</span><span>Pedidos digitais direto no ERP</span></div>
