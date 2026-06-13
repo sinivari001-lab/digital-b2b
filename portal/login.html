@@ -68,20 +68,37 @@
       document.getElementById('email').value = 'demo@empresa.com';
       document.getElementById('password').value = '123456';
 
+      document.title = 'Demo — DigitalB2B';
+
+      // Left panel: change messaging for distributor context
+      document.querySelector('.login-left h1').innerHTML = 'Veja o portal<br>que seus clientes usam';
+      document.querySelector('.login-left p').textContent = 'Este é um exemplo real do portal de compras. Seus clientes acessam, escolhem produtos e fazem pedidos — tudo online.';
+      document.querySelector('.login-features').innerHTML = `
+        <li><span class="icon">👁️</span> Você está vendo o portal do ponto de vista do comprador</li>
+        <li><span class="icon">🎨</span> Cores, logo e catálogo seriam da SUA empresa</li>
+        <li><span class="icon">📦</span> Seus clientes fariam pedidos por aqui 24h</li>
+        <li><span class="icon">📊</span> Você acompanha tudo pelo painel admin</li>
+      `;
+
+      // Right panel: simplify for demo
       const demoCtx = document.createElement('div');
       demoCtx.style.cssText = 'background:linear-gradient(135deg,#059669,#10b981);color:#fff;padding:16px 20px;border-radius:12px;margin-bottom:20px;text-align:center;';
-      demoCtx.innerHTML = '<strong style="font-size:1.05rem;">Veja como seus clientes comprariam</strong><p style="margin:6px 0 0;font-size:0.85rem;opacity:0.9;">Este é o portal que seus clientes usam para fazer pedidos. Clique em <strong>Entrar</strong> para experimentar.</p>';
+      demoCtx.innerHTML = '<strong style="font-size:1.05rem;">Demonstração do Portal</strong><p style="margin:6px 0 0;font-size:0.85rem;opacity:0.9;">Clique em <strong>Entrar</strong> para explorar como comprador. As credenciais já estão preenchidas.</p>';
       const form = document.getElementById('loginForm');
       form.parentNode.insertBefore(demoCtx, form);
 
-      document.querySelector('h2').textContent = 'Acesso Demonstração';
-      document.querySelector('.subtitle').textContent = 'Credenciais preenchidas — é só entrar';
+      document.querySelector('.login-right h2').textContent = 'Entrar na Demo';
+      document.querySelector('.subtitle').textContent = 'Pronto — é só clicar para explorar';
 
       const demoBox = document.querySelector('.login-demo');
       if (demoBox) demoBox.style.display = 'none';
 
       const registerLink = document.querySelector('div[style*="margin-top:12px"]');
       if (registerLink) registerLink.style.display = 'none';
+    } else {
+      // Normal buyer login: hide demo credentials
+      const demoBox = document.querySelector('.login-demo');
+      if (demoBox) demoBox.style.display = 'none';
     }
 
     document.getElementById('loginForm').addEventListener('submit', (e) => {
